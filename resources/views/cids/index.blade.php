@@ -28,27 +28,44 @@
             </div>
 
 
-            <form method="GET" action="{{ route('cids.index') }}" class="mt-5 grid gap-4 sm:grid-cols-[1fr_auto] lg:grid-cols-[1fr_120px_auto_auto] lg:items-end">
-                <div>
-                    <x-text-input id="search" name="search" type="search" class="block w-full" placeholder="Ketik kata kunci..." :value="$search" />
+            <form method="GET" action="{{ route('cids.index') }}" class="mt-5 grid gap-3 lg:grid-cols-[1fr_110px] lg:items-end">
+                {{-- Search Input --}}
+                <div class="flex flex-col gap-1.5">
+                    <x-input-label for="search" value="Pencarian" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
+                    <div class="relative">
+                        <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-neutral-500">search</span>
+                        <x-text-input id="search" name="search" type="search" class="block w-full pl-10" placeholder="CID, vendor, pelanggan, atau service…" :value="$search" />
+                    </div>
                 </div>
-                <div>
-                    <x-input-label for="per_page" value="Tampilkan" class="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
-                    <select id="per_page" name="per_page" class="block w-full rounded-xl border border-white/10 bg-[#262626] px-4 py-2.5 text-sm text-white focus:border-orange-500 focus:ring-orange-500/20">
+
+                {{-- Per Page --}}
+                <div class="flex flex-col gap-1.5">
+                    <x-input-label for="per_page" value="Tampilkan" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
+                    <select id="per_page" name="per_page"
+                        class="block w-full rounded-xl border border-white/10 bg-[#262626] px-4 py-2.5 text-sm text-white transition focus:border-[#e66a4a] focus:outline-none focus:ring-2 focus:ring-[#e66a4a]/20">
                         @foreach ([10, 25, 50] as $option)
-                            <option value="{{ $option }}" @selected($perPage === $option)>{{ $option }}</option>
+                            <option value="{{ $option }}" @selected($perPage === $option)>{{ $option }} baris</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="flex gap-2">
-                    <button type="submit" class="inline-flex h-[42px] items-center gap-2 rounded-xl bg-[#e66a4a] px-5 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
-                        <span class="material-symbols-outlined text-[16px]">search</span>
-                        Filter
+
+                {{-- Action Buttons --}}
+                <div class="flex items-center gap-2 border-t border-white/5 pt-4 lg:col-span-2">
+                    <button type="submit"
+                        class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
+                        <span class="material-symbols-outlined text-[16px]">tune</span>
+                        Terapkan Filter
                     </button>
-                    <a href="{{ route('cids.index') }}" class="inline-flex h-[42px] items-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-5 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">
-                        <span class="material-symbols-outlined text-[16px]">close</span>
-                        Reset
-                    </a>
+                    @if (request()->has('search'))
+                        <a href="{{ route('cids.index') }}"
+                            class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/10 bg-transparent px-4 text-sm text-neutral-400 transition hover:border-white/20 hover:text-white active:scale-[0.97]">
+                            <span class="material-symbols-outlined text-[16px]">restart_alt</span>
+                            Reset
+                        </a>
+                    @endif
+                    <span class="ml-auto text-xs text-neutral-500">
+                        {{ $cids->total() }} data ditemukan
+                    </span>
                 </div>
             </form>
         </div>
@@ -72,7 +89,7 @@
                             <th class="px-6 py-4 font-medium">Service</th>
                             <th class="px-6 py-4 font-medium">Target SLA</th>
                             <th class="px-6 py-4 text-center font-medium">Ticket</th>
-                            <th class="px-6 py-4 text-right font-medium">Aksi</th>
+                            <th class="px-6 py-4 text-center font-medium">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
@@ -105,8 +122,8 @@
                                         {{ $cid->tickets_count }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex justify-end items-center gap-2">
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex justify-center items-center gap-2">
                                         <button @click="ticketCidId = {{ $cid->id }}; ticketCidCid = @js($cid->cid); ticketCidIs = @js($cid->cid_is); ticketCidVendor = @js($cid->vendor_name); ticketCidCustomer = @js($cid->customer_name); ticketCidService = @js($cid->service); showTicketModal = true" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Tambah Tiket" aria-label="Tambah Tiket">
                                             <span class="material-symbols-outlined text-[14px]">add_circle</span>
                                         </button>

@@ -18,21 +18,32 @@ class GamasController extends Controller
     {
         $search = $request->query('search');
         $status = $request->query('status');
+        $perPage = (int) $request->query('per_page', 15);
+        $perPage = in_array($perPage, [10, 25, 50], true) ? $perPage : 15;
 
         $gamasList = Gamas::withCount(['tickets'])
+            ->with(['tickets' => fn ($q) => $q->with('cid')->take(1)])
             ->when($search, function ($query) use ($search) {
-                $query->where('gamas_number', 'like', "%{$search}%")
-                    ->orWhere('vendor_ticket_number', 'like', "%{$search}%")
-                    ->orWhere('case_type', 'like', "%{$search}%");
+                $query->where(function ($q) use ($search) {
+                    $q->where('gamas_number', 'like', "%{$search}%")
+                        ->orWhere('vendor_ticket_number', 'like', "%{$search}%")
+                        ->orWhere('case_type', 'like', "%{$search}%")
+                        ->orWhereHas('tickets.cid', function ($cq) use ($search) {
+                            $cq->where('cid', 'like', "%{$search}%")
+                                ->orWhere('customer_name', 'like', "%{$search}%")
+                                ->orWhere('cid_is', 'like', "%{$search}%")
+                                ->orWhere('vendor_name', 'like', "%{$search}%");
+                        });
+                });
             })
             ->when($status, function ($query) use ($status) {
                 $query->where('status', $status);
             })
             ->latest()
-            ->paginate(15)
+            ->paginate($perPage)
             ->withQueryString();
 
-        return view('gamas.index', compact('gamasList', 'search', 'status'));
+        return view('gamas.index', compact('gamasList', 'search', 'status', 'perPage'));
     }
 
     public function create(): View
