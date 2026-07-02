@@ -17,6 +17,15 @@
     if (! function_exists('slamNavActive')) {
         function slamNavActive($route, $params = [], $activePattern = null) {
             $pattern = $activePattern ?? ($route . '*');
+            
+            // Special handling for ticket detail pages to keep sidebar active
+            if (request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')) {
+                $ticket = request()->route('ticket');
+                if ($ticket && isset($params['status']) && $ticket->status === $params['status']) {
+                    return true;
+                }
+            }
+
             if (! request()->routeIs($pattern)) {
                 return false;
             }

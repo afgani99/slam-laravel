@@ -31,7 +31,7 @@ class TicketController extends Controller
         };
 
         $tickets = Ticket::query()
-            ->with('cid')
+            ->with('cid', 'gamas')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->when($status, function ($query) use ($status): void {
                 $query->where('status', $status);
@@ -56,7 +56,10 @@ class TicketController extends Controller
             ->paginate($perPage)
             ->withQueryString();
 
-        return view('tickets.index', compact('tickets', 'status', 'search', 'perPage', 'filter', 'caseType'));
+        $cids      = Cid::orderBy('cid')->get();
+        $caseTypes = Ticket::CASE_TYPES;
+
+        return view('tickets.index', compact('tickets', 'status', 'search', 'perPage', 'filter', 'caseType', 'cids', 'caseTypes'));
     }
 
     public function create(Request $request): View
@@ -94,7 +97,26 @@ class TicketController extends Controller
     {
         $ticket->load(['cid', 'pendingIntervals' => fn ($query) => $query->latest('started_at')]);
 
-        return view('tickets.show', compact('ticket'));
+        // Durasi Kendala: started_at -> finished_at (jika belum selesai pakai now())
+        $endTime = $ticket->finished_at ?? now();
+        $durasiTiket = $ticket->started_at->diff($endTime);
+
+        // Total Durasi Pending: jumlah durasi interval yang sudah selesai (memiliki ended_at)
+        $totalPendingSeconds = $ticket->pendingIntervals
+            ->whereNotNull('ended_at')
+            ->sum(fn ($interval) => $interval->started_at->diffInSeconds($interval->ended_at));
+
+        // Durasi Efektif = Durasi Tiket - Total Durasi Pending
+        $durasiTiketSeconds = $ticket->started_at->diffInSeconds($endTime);
+        $durasiEfektifSeconds = max(0, $durasiTiketSeconds - $totalPendingSeconds);
+
+        $formatDurasi = fn ($seconds) => sprintf('%d hari, %d jam, %d menit', floor($seconds / 86400), floor(($seconds % 86400) / 3600), floor(($seconds % 3600) / 60));
+
+        $durasiKendalaFormatted = $formatDurasi($durasiTiketSeconds);
+        $totalPendingFormatted = $formatDurasi($totalPendingSeconds);
+        $durasiEfektifFormatted = $formatDurasi($durasiEfektifSeconds);
+
+        return view('tickets.show', compact('ticket', 'durasiKendalaFormatted', 'totalPendingFormatted', 'durasiEfektifFormatted'));
     }
 
     public function edit(Ticket $ticket): View|RedirectResponse

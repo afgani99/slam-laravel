@@ -43,7 +43,10 @@ class GamasController extends Controller
             ->paginate($perPage)
             ->withQueryString();
 
-        return view('gamas.index', compact('gamasList', 'search', 'status', 'perPage'));
+        $cids = Cid::orderBy('cid')->get();
+        $caseTypes = Ticket::CASE_TYPES;
+
+        return view('gamas.index', compact('gamasList', 'search', 'status', 'perPage', 'cids', 'caseTypes'));
     }
 
     public function create(): View
