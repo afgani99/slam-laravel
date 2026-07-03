@@ -1,31 +1,23 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-4">
-            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e66a4a]/10 ring-1 ring-[#e66a4a]/20">
-                <span class="material-symbols-outlined text-[18px] text-[#e66a4a]">confirmation_number</span>
-            </div>
-            <div>
-                <h2 class="text-lg font-semibold tracking-tight text-white">Ticket {{ $ticket->ticket_number }}</h2>
-            </div>
-            <div class="ml-auto">
-                @include('tickets._status-badge', ['status' => $ticket->status])
-            </div>
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e66a4a]/10 ring-1 ring-[#e66a4a]/20">
+            <span class="material-symbols-outlined text-[18px] text-[#e66a4a]">confirmation_number</span>
+        </div>
+        <div>
+            <h2 class="text-[22px] font-semibold tracking-tight text-white">Ticket {{ $ticket->ticket_number }}</h2>
+            <p class="mt-1 text-sm text-neutral-500">Detail ticket pelanggan</p>
         </div>
     </x-slot>
 
     <div x-data="{ showTicketModal: false, modalAction: 'edit' }" class="space-y-4">
-        @if (session('success'))
-            <div class="flex items-center gap-3 rounded-lg border border-emerald-800 bg-emerald-950 p-3 text-xs text-emerald-400">
-                <span class="material-symbols-outlined text-sm text-emerald-500">check_circle</span>
-                {{ session('success') }}
-            </div>
-        @endif
-
         <div class="grid gap-4 lg:grid-cols-4">
             {{-- Main Info --}}
             <div class="slam-card lg:col-span-4">
                 <div class="flex items-center justify-between border-b border-white/5 px-5 py-3">
-                    <h3 class="font-semibold text-white">Informasi Ticket</h3>
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-semibold text-white">Informasi Ticket</h3>
+                        @include('tickets._status-badge', ['status' => $ticket->status])
+                    </div>
                     <div class="flex items-center gap-2">
                         @if (! $ticket->isClosed())
                             {{-- Edit Button --}}
@@ -120,6 +112,7 @@
                             <th class="px-2 py-2">Mulai</th>
                             <th class="px-2 py-2">Selesai</th>
                             <th class="px-2 py-2">Catatan</th>
+                            <th class="px-2 py-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
@@ -128,9 +121,22 @@
                                 <td class="px-2 py-2">{{ $i->started_at?->format('d M H:i') }}</td>
                                 <td class="px-2 py-2">{{ $i->ended_at?->format('d M H:i') ?: '-' }}</td>
                                 <td class="px-2 py-2">{{ $i->note ?: '-' }}</td>
+                                <td class="px-2 py-2">
+                                    <div class="flex items-center gap-2">
+                                        <form action="{{ route('tickets.pending-intervals.destroy', $i) }}" method="POST" onsubmit="return confirm('Hapus interval pending ini?')" class="inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
+                                                title="Hapus Pending">
+                                                <span class="material-symbols-outlined text-[14px]">delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" class="px-2 py-4 text-center">No history</td></tr>
+                            <tr><td colspan="4" class="px-2 py-4 text-center">No history</td></tr>
                         @endforelse
                     </tbody>
                 </table>

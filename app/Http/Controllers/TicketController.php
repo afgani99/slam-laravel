@@ -97,24 +97,29 @@ class TicketController extends Controller
     {
         $ticket->load(['cid', 'pendingIntervals' => fn ($query) => $query->latest('started_at')]);
 
-        // Durasi Kendala: started_at -> finished_at (jika belum selesai pakai now())
-        $endTime = $ticket->finished_at ?? now();
-        $durasiTiket = $ticket->started_at->diff($endTime);
+        $formatDurasi = fn ($seconds) => sprintf('%d jam, %d menit, %d detik', floor($seconds / 3600), floor(($seconds % 3600) / 60), $seconds % 60);
 
         // Total Durasi Pending: jumlah durasi interval yang sudah selesai (memiliki ended_at)
-        $totalPendingSeconds = $ticket->pendingIntervals
-            ->whereNotNull('ended_at')
-            ->sum(fn ($interval) => $interval->started_at->diffInSeconds($interval->ended_at));
+        $pendingFinished = $ticket->pendingIntervals->whereNotNull('ended_at');
+        
+        if ($pendingFinished->isEmpty()) {
+            $totalPendingFormatted = '-';
+            $totalPendingSeconds = 0;
+        } else {
+            $totalPendingSeconds = $pendingFinished->sum(fn ($interval) => $interval->started_at->diffInSeconds($interval->ended_at));
+            $totalPendingFormatted = $formatDurasi($totalPendingSeconds);
+        }
 
-        // Durasi Efektif = Durasi Tiket - Total Durasi Pending
-        $durasiTiketSeconds = $ticket->started_at->diffInSeconds($endTime);
-        $durasiEfektifSeconds = max(0, $durasiTiketSeconds - $totalPendingSeconds);
-
-        $formatDurasi = fn ($seconds) => sprintf('%d hari, %d jam, %d menit', floor($seconds / 86400), floor(($seconds % 86400) / 3600), floor(($seconds % 3600) / 60));
-
-        $durasiKendalaFormatted = $formatDurasi($durasiTiketSeconds);
-        $totalPendingFormatted = $formatDurasi($totalPendingSeconds);
-        $durasiEfektifFormatted = $formatDurasi($durasiEfektifSeconds);
+        // Durasi Kendala & Efektif: hanya hitung jika sudah ada finished_at, kosong jika belum
+        if ($ticket->finished_at) {
+            $durasiTiketSeconds = $ticket->started_at->diffInSeconds($ticket->finished_at);
+            $durasiEfektifSeconds = max(0, $durasiTiketSeconds - $totalPendingSeconds);
+            $durasiKendalaFormatted = $formatDurasi($durasiTiketSeconds);
+            $durasiEfektifFormatted = $formatDurasi($durasiEfektifSeconds);
+        } else {
+            $durasiKendalaFormatted = '-';
+            $durasiEfektifFormatted = '-';
+        }
 
         return view('tickets.show', compact('ticket', 'durasiKendalaFormatted', 'totalPendingFormatted', 'durasiEfektifFormatted'));
     }

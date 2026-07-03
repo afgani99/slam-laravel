@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tickets/{ticket}/pending', [TicketStatusController::class, 'pending'])->name('tickets.pending');
     Route::post('/tickets/{ticket}/resume', [TicketStatusController::class, 'resume'])->name('tickets.resume');
     Route::post('/tickets/{ticket}/close', [TicketStatusController::class, 'close'])->name('tickets.close');
+    Route::delete('/tickets/pending-intervals/{interval}', [App\Http\Controllers\TicketPendingIntervalController::class, 'destroy'])->name('tickets.pending-intervals.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
