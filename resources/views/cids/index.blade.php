@@ -70,12 +70,6 @@
             </form>
         </div>
 
-        @if (session('success'))
-            <div class="flex items-center gap-3 rounded-2xl border border-emerald-500/15 bg-emerald-500/8 px-5 py-4 text-sm text-emerald-400">
-                <span class="material-symbols-outlined text-[20px]">check_circle</span>
-                {{ session('success') }}
-            </div>
-        @endif
 
         <div class="slam-panel overflow-hidden">
             <div class="overflow-x-auto">

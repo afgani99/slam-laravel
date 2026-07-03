@@ -86,77 +86,81 @@
 
             @if (!empty($intervalLogs))
                 <div class="mt-6 border-t border-white/5 pt-6">
-                    <p class="text-xs text-neutral-500">Riwayat Pending</p>
-                    <div class="mt-2 space-y-4">
-                        @foreach ($intervalLogs as $interval)
-                            <div class="rounded-lg bg-neutral-900/50 p-4 text-sm text-neutral-300">
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <span class="font-medium text-white">Pending</span>
-                                        <span class="mx-2 text-neutral-500">•</span>
-                                        <span>{{ $interval['pending']->started_at->format('d M Y H:i') }}</span>
-                                        @if ($interval['pending']->reason)
-                                            <span class="ml-2 text-neutral-400">Alasan: {{ $interval['pending']->reason }}</span>
-                                        @endif
-                                    </div>
-                                    <form action="{{ route('gamas.logs.destroy', $interval['pending']) }}" method="POST" onsubmit="return confirm('Hapus interval pending ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-neutral-500 hover:text-red-400">
-                                            <span class="material-symbols-outlined text-[18px]">delete</span>
-                                        </button>
-                                    </form>
-                                </div>
-                                @if ($interval['resume'])
-                                    <div class="mt-3 border-t border-white/5 pt-3">
-                                        <span class="font-medium text-white">Lanjutkan</span>
-                                        <span class="mx-2 text-neutral-500">•</span>
-                                        <span>{{ $interval['resume']->started_at->format('d M Y H:i') }}</span>
-                                    </div>
-                                @endif
-                            </div>
-                        @endforeach
+                    <h3 class="mb-3 text-sm font-semibold text-white">Riwayat Pending</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-neutral-400">
+                            <thead class="border-b border-white/5 uppercase text-neutral-600">
+                                <tr>
+                                    <th class="px-2 py-2">Mulai</th>
+                                    <th class="px-2 py-2">Selesai</th>
+                                    <th class="px-2 py-2">Catatan</th>
+                                    <th class="px-2 py-2">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
+                                @foreach ($intervalLogs as $interval)
+                                    <tr>
+                                        <td class="px-2 py-2">{{ $interval['pending']->started_at->format('d M H:i') }}</td>
+                                        <td class="px-2 py-2">{{ $interval['resume']?->started_at?->format('d M H:i') ?: '-' }}</td>
+                                        <td class="px-2 py-2">{{ $interval['pending']->reason ?: '-' }}</td>
+                                        <td class="px-2 py-2">
+                                            <div class="flex items-center gap-2">
+                                                <form action="{{ route('gamas.logs.destroy', $interval['pending']) }}" method="POST" onsubmit="return confirm('Hapus interval pending ini?')" class="inline-block">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
+                                                        title="Hapus Pending">
+                                                        <span class="material-symbols-outlined text-[14px]">delete</span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             @endif
         </div>
 
         @if ($activeTickets->isNotEmpty())
-            <div class="slam-card p-6">
-                <div>
-                    <p class="text-lg font-semibold text-white">CID Masih Terdampak</p>
-                    <p class="text-sm text-neutral-500">{{ $activeTickets->count() }} tiket belum selesai</p>
-                </div>
-                <div class="mt-5 overflow-hidden rounded-2xl border border-white/5 bg-[#151515]">
-                    <table class="w-full text-left text-sm">
-                        <thead class="border-b border-white/5 text-[11px] uppercase tracking-[0.18em] text-neutral-500">
+            <div class="slam-card p-5">
+                <h3 class="mb-3 text-sm font-semibold text-white">Laporan CID Terdampak</h3>
+                <p class="mb-3 text-xs text-neutral-500">{{ $activeTickets->count() }} tiket belum selesai</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-neutral-400">
+                        <thead class="border-b border-white/5 uppercase text-neutral-600">
                             <tr>
-                                <th class="px-6 py-3">Ticket #</th>
-                                <th class="px-6 py-3">CID</th>
-                                <th class="px-6 py-3">Pelanggan</th>
-                                <th class="px-6 py-3">Status</th>
-                                <th class="px-6 py-3">Aksi</th>
+                                <th class="px-2 py-2">Ticket #</th>
+                                <th class="px-2 py-2">CID</th>
+                                <th class="px-2 py-2">Vendor</th>
+                                <th class="px-2 py-2">Pelanggan</th>
+                                <th class="px-2 py-2">Status</th>
+                                <th class="px-2 py-2 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
                             @foreach ($activeTickets as $ticket)
-                                <tr class="transition hover:bg-white/[0.03]">
-                                    <td class="px-6 py-3">
-                                        <a href="{{ route('tickets.show', $ticket) }}" class="font-medium text-orange-400">{{ $ticket->ticket_number }}</a>
+                                <tr>
+                                    <td class="px-2 py-2">
+                                        <a href="{{ route('tickets.show', $ticket) }}" class="font-medium text-orange-400 hover:text-orange-300">{{ $ticket->ticket_number }}</a>
                                     </td>
-                                    <td class="px-6 py-3 text-neutral-300">{{ $ticket->cid->cid }}</td>
-                                    <td class="px-6 py-3 text-neutral-300">{{ $ticket->cid->customer_name }}</td>
-                                    <td class="px-6 py-3">@include('tickets._status-badge', ['status' => $ticket->status])</td>
-                                    <td class="px-6 py-3">
-                                        <div class="flex items-center gap-1">
-                                            <a href="{{ route('tickets.show', $ticket) }}" class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Detail Ticket">
+                                    <td class="px-2 py-2 text-neutral-300">{{ $ticket->cid->cid }}</td>
+                                    <td class="px-2 py-2 text-neutral-300">{{ $ticket->cid->vendor_name }}</td>
+                                    <td class="px-2 py-2 text-neutral-300">{{ $ticket->cid->customer_name }}</td>
+                                    <td class="px-2 py-2">@include('tickets._status-badge', ['status' => $ticket->status])</td>
+                                    <td class="px-2 py-2 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="{{ route('tickets.show', $ticket) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Detail Ticket">
                                                 <span class="material-symbols-outlined text-[14px]">visibility</span>
                                             </a>
                                             @if (!$gamas->isClosed())
-                                                <form action="{{ route('gamas.tickets.destroy', [$gamas, $ticket]) }}" method="POST" onsubmit="return confirm('Hapus tiket ini dari GAMAS?')">
+                                                <form action="{{ route('gamas.tickets.destroy', [$gamas, $ticket]) }}" method="POST" onsubmit="return confirm('Hapus tiket ini dari GAMAS?')" class="inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400" title="Hapus Ticket">
+                                                    <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400" title="Hapus Ticket">
                                                         <span class="material-symbols-outlined text-[14px]">delete</span>
                                                     </button>
                                                 </form>
@@ -172,33 +176,37 @@
         @endif
 
         @if ($closedTickets->isNotEmpty())
-            <div class="slam-card p-6">
-                <div>
-                    <p class="text-lg font-semibold text-white">CID Selesai Lebih Dulu</p>
-                    <p class="text-sm text-neutral-500">{{ $closedTickets->count() }} tiket sudah ditutup</p>
-                </div>
-                <div class="mt-5 overflow-hidden rounded-2xl border border-white/5 bg-[#151515]">
-                    <table class="w-full text-left text-sm">
-                        <thead class="border-b border-white/5 text-[11px] uppercase tracking-[0.18em] text-neutral-500">
+            <div class="slam-card p-5">
+                <h3 class="mb-3 text-sm font-semibold text-white">Laporan CID Selesai</h3>
+                <p class="mb-3 text-xs text-neutral-500">{{ $closedTickets->count() }} tiket sudah ditutup</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-neutral-400">
+                        <thead class="border-b border-white/5 uppercase text-neutral-600">
                             <tr>
-                                <th class="px-6 py-3">Ticket #</th>
-                                <th class="px-6 py-3">CID</th>
-                                <th class="px-6 py-3">Pelanggan</th>
-                                <th class="px-6 py-3">Selesai</th>
-                                <th class="px-6 py-3">Aksi</th>
+                                <th class="px-2 py-2">Ticket #</th>
+                                <th class="px-2 py-2">CID</th>
+                                <th class="px-2 py-2">Vendor</th>
+                                <th class="px-2 py-2">Pelanggan</th>
+                                <th class="px-2 py-2">Selesai</th>
+                                <th class="px-2 py-2 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
                             @foreach ($closedTickets as $ticket)
-                                <tr class="transition hover:bg-white/[0.03]">
-                                    <td class="px-6 py-3">
-                                        <a href="{{ route('tickets.show', $ticket) }}" class="font-medium text-orange-400">{{ $ticket->ticket_number }}</a>
+                                <tr>
+                                    <td class="px-2 py-2">
+                                        <a href="{{ route('tickets.show', $ticket) }}" class="font-medium text-orange-400 hover:text-orange-300">{{ $ticket->ticket_number }}</a>
                                     </td>
-                                    <td class="px-6 py-3 text-neutral-300">{{ $ticket->cid->cid }}</td>
-                                    <td class="px-6 py-3 text-neutral-300">{{ $ticket->cid->customer_name }}</td>
-                                    <td class="px-6 py-3 text-neutral-400">{{ $ticket->finished_at?->format('d M H:i') }}</td>
-                                    <td class="px-6 py-3">
-                                        <a href="{{ route('tickets.show', $ticket) }}" class="text-xs text-neutral-400 hover:text-white">Detail</a>
+                                    <td class="px-2 py-2 text-neutral-300">{{ $ticket->cid->cid }}</td>
+                                    <td class="px-2 py-2 text-neutral-300">{{ $ticket->cid->vendor_name }}</td>
+                                    <td class="px-2 py-2 text-neutral-300">{{ $ticket->cid->customer_name }}</td>
+                                    <td class="px-2 py-2 text-neutral-400">{{ $ticket->finished_at?->format('d M H:i') }}</td>
+                                    <td class="px-2 py-2 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="{{ route('tickets.show', $ticket) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Detail Ticket">
+                                                <span class="material-symbols-outlined text-[14px]">visibility</span>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

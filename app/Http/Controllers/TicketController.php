@@ -82,12 +82,6 @@ class TicketController extends Controller
             'status' => Ticket::STATUS_OPEN,
         ]);
 
-        if ($request->has('_from_cid')) {
-            return redirect()
-                ->route('cids.index')
-                ->with('success', 'Ticket berhasil dibuat.');
-        }
-
         return redirect()
             ->route('tickets.index', ['status' => 'open'])
             ->with('success', 'Ticket berhasil dibuat.');
@@ -156,10 +150,17 @@ class TicketController extends Controller
             return back()->with('error', 'Ticket closed tidak dapat dihapus.');
         }
 
+        $previousUrl = url()->previous();
+        $isFromShowPage = $previousUrl && str_contains($previousUrl, "/tickets/{$ticket->id}") && !str_contains($previousUrl, 'index');
+
         $ticket->delete();
 
-        return redirect()
-            ->route('tickets.index')
-            ->with('success', 'Ticket berhasil dihapus.');
+        if ($isFromShowPage) {
+            return redirect()
+                ->route('tickets.index', ['status' => 'open'])
+                ->with('success', 'Ticket berhasil dihapus.');
+        }
+
+        return back()->with('success', 'Ticket berhasil dihapus.');
     }
 }
