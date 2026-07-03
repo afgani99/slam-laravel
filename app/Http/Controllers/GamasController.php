@@ -216,6 +216,8 @@ class GamasController extends Controller
                     'vendor_ticket_number' => $validated['vendor_ticket_number'],
                     'case_type' => $validated['case_type'],
                     'started_at' => $validated['started_at'],
+                    'finished_at' => $validated['finished_at'],
+                    'rfo_action' => $validated['rfo_action'],
                 ]);
         });
 
@@ -245,12 +247,14 @@ class GamasController extends Controller
             // Close semua tiket yang belum closed
             $gamas->tickets()
                 ->whereNot('status', Ticket::STATUS_CLOSED)
-                ->update([
-                    'finished_at' => $validated['finished_at'],
-                    'rfo_action' => $validated['rfo_action'],
-                    'status' => Ticket::STATUS_CLOSED,
-                    'closed_at' => $validated['finished_at'],
-                ]);
+                ->each(function ($ticket) use ($validated) {
+                    $ticket->update([
+                        'finished_at' => $validated['finished_at'],
+                        'rfo_action' => $validated['rfo_action'],
+                        'status' => Ticket::STATUS_CLOSED,
+                        'closed_at' => $validated['finished_at'],
+                    ]);
+                });
         });
 
         return redirect()
@@ -276,9 +280,16 @@ class GamasController extends Controller
                 'started_at' => $validated['pending_at'],
             ]);
 
+            // Sync ke tiket anak: buat record pending interval dan ubah status
             $gamas->tickets()
                 ->whereNot('status', Ticket::STATUS_CLOSED)
-                ->update(['status' => Ticket::STATUS_PENDING]);
+                ->each(function ($ticket) use ($validated) {
+                    $ticket->pendingIntervals()->create([
+                        'started_at' => $validated['pending_at'],
+                        'note' => $validated['reason'],
+                    ]);
+                    $ticket->update(['status' => Ticket::STATUS_PENDING]);
+                });
         });
 
         return redirect()->route('gamas.show', $gamas)->with('success', 'GAMAS di-pending.');
@@ -308,9 +319,17 @@ class GamasController extends Controller
                 'started_at' => $validated['resume_at'],
             ]);
 
+            // Sync ke tiket anak: tutup interval pending yang aktif dan ubah status
             $gamas->tickets()
                 ->where('status', Ticket::STATUS_PENDING)
-                ->update(['status' => Ticket::STATUS_OPEN]);
+                ->each(function ($ticket) use ($validated) {
+                    $ticket->pendingIntervals()
+                        ->whereNull('ended_at')
+                        ->latest()
+                        ->first()?->update(['ended_at' => $validated['resume_at']]);
+                    
+                    $ticket->update(['status' => Ticket::STATUS_OPEN]);
+                });
         });
 
         return redirect()->route('gamas.show', $gamas)->with('success', 'GAMAS dilanjutkan.');
