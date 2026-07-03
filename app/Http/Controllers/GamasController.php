@@ -7,6 +7,7 @@ use App\Models\Gamas;
 use App\Models\Ticket;
 use App\Models\GamasLog;
 use App\Services\TicketNumberService;
+use App\Support\LogsActivity;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,7 @@ use Illuminate\View\View;
 
 class GamasController extends Controller
 {
+    use LogsActivity;
     public function index(Request $request): View
     {
         $search = $request->query('search');
@@ -221,6 +223,8 @@ class GamasController extends Controller
                 ]);
         });
 
+        $this->logActivity('update', 'Memperbarui GAMAS '.$gamas->gamas_number, $gamas);
+
         return redirect()->route('gamas.show', $gamas)->with('success', 'GAMAS berhasil diperbarui.');
     }
 
@@ -257,6 +261,8 @@ class GamasController extends Controller
                 });
         });
 
+        $this->logActivity('close', 'Menutup GAMAS '.$gamas->gamas_number, $gamas);
+
         return redirect()
             ->route('gamas.show', $gamas)
             ->with('success', 'GAMAS berhasil ditutup.');
@@ -291,6 +297,8 @@ class GamasController extends Controller
                     $ticket->update(['status' => Ticket::STATUS_PENDING]);
                 });
         });
+
+        $this->logActivity('pending', 'Mengubah GAMAS '.$gamas->gamas_number.' ke pending', $gamas);
 
         return redirect()->route('gamas.show', $gamas)->with('success', 'GAMAS di-pending.');
     }
@@ -332,6 +340,8 @@ class GamasController extends Controller
                 });
         });
 
+        $this->logActivity('resume', 'Melanjutkan GAMAS '.$gamas->gamas_number, $gamas);
+
         return redirect()->route('gamas.show', $gamas)->with('success', 'GAMAS dilanjutkan.');
     }
 
@@ -369,6 +379,8 @@ class GamasController extends Controller
             $log->delete();
         });
 
+        $this->logActivity('delete', 'Menghapus interval pending GAMAS '.$gamas->gamas_number, $gamas);
+
         return redirect()->route('gamas.show', $gamas)->with('success', 'Interval pending berhasil dihapus.');
     }
 
@@ -378,15 +390,22 @@ class GamasController extends Controller
             return back()->with('error', 'Tidak dapat menghapus tiket pada GAMAS yang sudah ditutup.');
         }
 
+        $ticketNumber = $ticket->ticket_number;
+
         DB::transaction(function () use ($ticket) {
             $ticket->delete();
         });
+
+        $this->logActivity('delete', 'Menghapus ticket '.$ticketNumber.' dari GAMAS '.$gamas->gamas_number, $gamas);
 
         return back()->with('success', 'Tiket berhasil dihapus dari GAMAS.');
     }
 
     public function destroy(Gamas $gamas): RedirectResponse
     {
+        $gamasNumber = $gamas->gamas_number;
+        $this->logActivity('delete', 'Menghapus GAMAS '.$gamasNumber, $gamas);
+
         DB::transaction(function () use ($gamas) {
             $gamas->tickets()->delete();
             $gamas->logs()->delete();

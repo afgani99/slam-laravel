@@ -11,6 +11,7 @@
         'reports' => [
             ['route' => 'sla.monthly', 'params' => [], 'icon' => 'bar_chart', 'label' => 'SLA Bulanan'],
             ['route' => 'sla.restitution', 'params' => [], 'icon' => 'savings', 'label' => 'Restitusi'],
+            ['route' => 'activity-logs.index', 'params' => [], 'icon' => 'history', 'label' => 'Log Aktivitas'],
         ],
     ];
 

@@ -6,11 +6,13 @@ use App\Http\Requests\CloseTicketRequest;
 use App\Http\Requests\PendingTicketRequest;
 use App\Http\Requests\ResumeTicketRequest;
 use App\Models\Ticket;
+use App\Support\LogsActivity;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
 class TicketStatusController extends Controller
 {
+    use LogsActivity;
     public function pending(PendingTicketRequest $request, Ticket $ticket): RedirectResponse
     {
         DB::transaction(function () use ($request, $ticket): void {
@@ -20,6 +22,8 @@ class TicketStatusController extends Controller
                 'status' => Ticket::STATUS_PENDING,
             ]);
         });
+
+        $this->logActivity('pending', 'Mengubah ticket '.$ticket->ticket_number.' ke pending', $ticket);
 
         return redirect()
             ->route('tickets.show', $ticket)
@@ -40,6 +44,8 @@ class TicketStatusController extends Controller
             ]);
         });
 
+        $this->logActivity('resume', 'Melanjutkan ticket '.$ticket->ticket_number, $ticket);
+
         return redirect()
             ->route('tickets.show', $ticket)
             ->with('success', 'Ticket berhasil dilanjutkan.');
@@ -54,6 +60,8 @@ class TicketStatusController extends Controller
             'status' => Ticket::STATUS_CLOSED,
             'closed_at' => $validated['finished_at'],
         ]);
+
+        $this->logActivity('close', 'Menutup ticket '.$ticket->ticket_number, $ticket);
 
         return redirect()
             ->route('tickets.show', $ticket)

@@ -18,6 +18,16 @@ class SlaMonthlyController extends Controller
 
         $results = $slaService->calculateSlaForPeriod($startDate, $endDate);
 
+        $search = $request->query('search');
+        if ($search) {
+            $results = array_values(array_filter($results, function ($item) use ($search) {
+                return stripos($item['cid'], $search) !== false ||
+                    stripos($item['vendor_name'], $search) !== false ||
+                    stripos($item['customer_name'], $search) !== false ||
+                    stripos($item['service'], $search) !== false;
+            }));
+        }
+
         $months = [
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
             5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',

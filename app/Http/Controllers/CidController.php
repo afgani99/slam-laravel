@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCidRequest;
 use App\Models\Cid;
 use App\Models\Ticket;
 use App\Services\SlaService;
+use App\Support\LogsActivity;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class CidController extends Controller
 {
+    use LogsActivity;
     /**
      * Display a listing of the resource.
      */
@@ -59,6 +61,8 @@ class CidController extends Controller
     public function store(StoreCidRequest $request): RedirectResponse
     {
         $cid = Cid::create($request->validated());
+
+        $this->logActivity('create', 'Menambahkan CID '.$cid->cid, $cid);
 
         if ($request->has('_modal')) {
             return redirect()
@@ -122,6 +126,8 @@ class CidController extends Controller
     {
         $cid->update($request->validated());
 
+        $this->logActivity('update', 'Memperbarui CID '.$cid->cid, $cid);
+
         if ($request->has('_modal')) {
             return redirect()
                 ->route('cids.index')
@@ -135,6 +141,9 @@ class CidController extends Controller
 
     public function destroy(Cid $cid): RedirectResponse
     {
+        $cidNumber = $cid->cid;
+        $this->logActivity('delete', 'Menghapus CID '.$cidNumber.' dan semua tiket terkait', $cid);
+
         DB::transaction(function () use ($cid): void {
             // Hapus semua interval pending dari tiket-tiket milik CID ini
             \App\Models\TicketPendingInterval::whereIn('ticket_id', function ($query) use ($cid) {

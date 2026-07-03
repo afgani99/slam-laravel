@@ -80,6 +80,71 @@ class SlaService
             $status = $slaAchieved >= (float) $cid->sla_percentage ? 'Aman' : 'Perlu Restitusi';
 
             $results[] = [
+                'id' => $cid->id,
+                'cid' => $cid->cid,
+                'vendor_name' => $cid->vendor_name,
+                'customer_name' => $cid->customer_name,
+                'service' => $cid->service,
+                'sla_target' => (float) $cid->sla_percentage,
+                'total_downtime' => $totalDuration,
+                'total_pending' => $totalPending,
+                'effective_downtime' => $effectiveDowntime,
+                'sla_achieved' => $slaAchieved,
+                'status' => $status,
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Hitung SLA untuk rentang waktu tertentu (semua case_type).
+     * Hanya ticket closed, tanpa filter case_type.
+     */
+    public function calculateSlaForPeriodAllTickets(CarbonInterface $startDate, CarbonInterface $endDate): array
+    {
+        $totalMinutesInPeriod = $startDate->diffInMinutes($endDate);
+
+        $cids = Cid::with(['tickets' => function ($query) use ($startDate, $endDate) {
+            $query->where('status', Ticket::STATUS_CLOSED)
+                ->whereBetween('started_at', [$startDate, $endDate]);
+        }])->get();
+
+        $results = [];
+
+        foreach ($cids as $cid) {
+            if ($cid->tickets->isEmpty()) {
+                continue;
+            }
+
+            $totalDuration = 0;
+            $totalPending = 0;
+
+            foreach ($cid->tickets as $ticket) {
+                if (! $ticket->finished_at) {
+                    continue;
+                }
+
+                $duration = (int) $ticket->started_at->diffInMinutes($ticket->finished_at);
+                $totalDuration += $duration;
+
+                $pendingMinutes = (int) $ticket->pendingIntervals()
+                    ->whereNotNull('ended_at')
+                    ->get()
+                    ->sum(fn ($interval) => (int) $interval->started_at->diffInMinutes($interval->ended_at));
+
+                $totalPending += $pendingMinutes;
+            }
+
+            $effectiveDowntime = max(0, $totalDuration - $totalPending);
+            $slaAchieved = $totalMinutesInPeriod > 0
+                ? round((($totalMinutesInPeriod - $effectiveDowntime) / $totalMinutesInPeriod) * 100, 2)
+                : 100.00;
+
+            $status = $slaAchieved >= (float) $cid->sla_percentage ? 'Aman' : 'Perlu Restitusi';
+
+            $results[] = [
+                'id' => $cid->id,
                 'cid' => $cid->cid,
                 'vendor_name' => $cid->vendor_name,
                 'customer_name' => $cid->customer_name,

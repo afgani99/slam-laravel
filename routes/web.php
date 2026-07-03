@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CidController;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GamasController;
 use App\Http\Controllers\ProfileController;
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/sla/monthly', SlaMonthlyController::class)->name('sla.monthly');
     Route::get('/sla/restitution', SlaRestitutionController::class)->name('sla.restitution');
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
 
 require __DIR__.'/auth.php';

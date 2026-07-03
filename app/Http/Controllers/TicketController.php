@@ -7,12 +7,14 @@ use App\Http\Requests\UpdateTicketRequest;
 use App\Models\Cid;
 use App\Models\Ticket;
 use App\Services\TicketNumberService;
+use App\Support\LogsActivity;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
+    use LogsActivity;
     public function index(Request $request): View
     {
         $status = $request->query('status'); // Bisa null
@@ -82,6 +84,8 @@ class TicketController extends Controller
             'status' => Ticket::STATUS_OPEN,
         ]);
 
+        $this->logActivity('create', 'Membuat ticket '.$ticket->ticket_number, $ticket);
+
         return redirect()
             ->route('tickets.index', ['status' => 'open'])
             ->with('success', 'Ticket berhasil dibuat.');
@@ -139,6 +143,8 @@ class TicketController extends Controller
     {
         $ticket->update($request->validated());
 
+        $this->logActivity('update', 'Memperbarui ticket '.$ticket->ticket_number, $ticket);
+
         return redirect()
             ->route('tickets.show', $ticket)
             ->with('success', 'Ticket berhasil diperbarui.');
@@ -146,12 +152,11 @@ class TicketController extends Controller
 
     public function destroy(Ticket $ticket): RedirectResponse
     {
-        if ($ticket->isClosed()) {
-            return back()->with('error', 'Ticket closed tidak dapat dihapus.');
-        }
-
         $previousUrl = url()->previous();
         $isFromShowPage = $previousUrl && str_contains($previousUrl, "/tickets/{$ticket->id}") && !str_contains($previousUrl, 'index');
+
+        $ticketNumber = $ticket->ticket_number;
+        $this->logActivity('delete', 'Menghapus ticket '.$ticketNumber, $ticket);
 
         $ticket->delete();
 
