@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/sla/monthly', SlaMonthlyController::class)->name('sla.monthly');
     Route::get('/sla/restitution', SlaRestitutionController::class)->name('sla.restitution');
+    Route::get('/sla/restitution/export', [SlaRestitutionController::class, 'export'])->name('sla.restitution.export');
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::resource('users', UserController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);

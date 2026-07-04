@@ -72,6 +72,10 @@
                     <span class="ml-auto text-xs text-neutral-500">
                         {{ $totalRestitusi }} data ditemukan
                     </span>
+                    <a href="{{ route('sla.restitution.export', request()->query()) }}" class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-emerald-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-700 active:scale-[0.97]">
+                        <span class="material-symbols-outlined text-[16px]">download</span>
+                        Export Excel
+                    </a>
                 </div>
             </form>
         </div>

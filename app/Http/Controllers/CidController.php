@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCidRequest;
 use App\Models\Cid;
 use App\Models\Ticket;
 use App\Services\SlaService;
+use App\Exports\CidExport;
 use App\Support\LogsActivity;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -19,8 +20,13 @@ class CidController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
+        if ($request->has('export')) {
+            $cids = Cid::orderBy('vendor_name')->get();
+            return (new CidExport($cids))->download('Master_CID_' . date('Y-m-d') . '.xlsx');
+        }
+
         $search = trim((string) $request->query('search'));
         $perPage = (int) $request->query('per_page', 10);
         $perPage = in_array($perPage, [10, 25, 50], true) ? $perPage : 10;
