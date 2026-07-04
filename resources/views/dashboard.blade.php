@@ -48,7 +48,7 @@
             <a href="{{ route('tickets.index', ['status' => 'open', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">Tiket Open</p><div class="mt-4 text-[34px] font-semibold leading-none text-emerald-400">{{ $stats['opened_count'] }}</div></a>
             <a href="{{ route('tickets.index', ['status' => 'pending', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">Tiket Pending</p><div class="mt-4 text-[34px] font-semibold leading-none text-yellow-400">{{ $stats['pending_count'] }}</div></a>
             <a href="{{ route('tickets.index', ['status' => 'closed', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">Tiket Closed</p><div class="mt-4 text-[34px] font-semibold leading-none text-blue-400">{{ $stats['closed_count'] }}</div></a>
-            <a href="{{ route('tickets.index', ['status' => 'closed', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">CID Restitusi</p><div class="mt-4 text-[34px] font-semibold leading-none text-red-400">{{ $stats['restitution_count'] }}</div></a>
+            <a href="{{ route('sla.restitution') }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">CID Restitusi</p><div class="mt-4 text-[34px] font-semibold leading-none text-red-400">{{ $stats['restitution_count'] }}</div></a>
         </div>
 
         <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
@@ -93,9 +93,9 @@
                 </div>
             </div>
 
-            <div class="slam-card p-5">
+            <div class="slam-card flex flex-col p-5">
                 <div class="flex items-center justify-between"><div><p class="text-sm font-semibold text-white">Recent Ticket</p><p class="text-xs text-neutral-500">Ticket terbaru pada periode terpilih</p></div><a href="{{ route('tickets.index', ['status' => 'open']) }}" class="rounded-full border border-white/5 bg-[#262626] px-3 py-1.5 text-[11px] text-neutral-400 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white">Details</a></div>
-                <div class="mt-4 overflow-hidden rounded-2xl border border-white/5 bg-[#262626]">
+                <div class="mt-4 flex-1 overflow-hidden rounded-2xl border border-white/5 bg-[#262626]">
                     <table class="w-full text-left text-sm">
                         <thead class="border-b border-white/5 bg-[#2a2a2a] text-[11px] uppercase tracking-[0.18em] text-neutral-500"><tr><th class="px-4 py-3">Ticket</th><th class="px-4 py-3">CID</th><th class="px-4 py-3">When</th></tr></thead>
                         <tbody class="divide-y divide-white/5">

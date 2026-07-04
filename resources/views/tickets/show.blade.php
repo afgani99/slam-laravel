@@ -71,6 +71,10 @@
                         <p class="text-neutral-300">{{ $ticket->vendor_ticket_number ?: '-' }}</p>
                     </div>
                     <div>
+                        <p class="text-[10px] uppercase text-neutral-500">Vendor</p>
+                        <p class="text-neutral-300">{{ $ticket->cid->vendor_name ?: '-' }}</p>
+                    </div>
+                    <div>
                         <p class="text-[10px] uppercase text-neutral-500">CID</p>
                         <p class="text-neutral-300">{{ $ticket->cid->cid }}</p>
                     </div>

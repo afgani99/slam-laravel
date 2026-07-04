@@ -26,7 +26,7 @@ class DashboardController extends Controller
         $recentTickets = Ticket::with('cid')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->orderByDesc('created_at')
-            ->take(10)
+            ->take(5)
             ->get();
 
         $topCidIssues = Ticket::selectRaw('cid_id, COUNT(*) as total')

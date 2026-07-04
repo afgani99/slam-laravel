@@ -107,6 +107,7 @@
                         <tr>
                             <th class="px-6 py-4 font-medium">Ticket #</th>
                             <th class="px-6 py-4 font-medium">CID</th>
+                            <th class="px-6 py-4 font-medium">Vendor</th>
                             <th class="px-6 py-4 font-medium">Pelanggan</th>
                             <th class="px-6 py-4 font-medium">Kasus</th>
                             <th class="px-6 py-4 font-medium">Status</th>
@@ -130,6 +131,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-neutral-300">{{ $ticket->cid->cid }}</td>
+                                <td class="px-6 py-4 text-neutral-300">{{ $ticket->cid->vendor_name ?: '-' }}</td>
                                 <td class="px-6 py-4 text-neutral-300">{{ $ticket->cid->customer_name }}</td>
                                 <td class="px-6 py-4 text-neutral-300">{{ $ticket->case_type }}</td>
                                 <td class="px-6 py-4">@include('tickets._status-badge', ['status' => $ticket->status])</td>
@@ -151,7 +153,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-16 text-center">
+                                <td colspan="8" class="px-6 py-16 text-center">
                                     <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5">
                                         <span class="material-symbols-outlined text-2xl text-neutral-500">inbox</span>
                                     </div>
