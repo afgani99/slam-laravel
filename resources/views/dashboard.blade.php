@@ -13,18 +13,20 @@
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 class="text-sm font-medium text-neutral-400">Statistik Ringkasan</h3>
             <div class="flex flex-wrap items-center gap-2">
-                <button type="button" @click="showCidModal = true" class="inline-flex items-center gap-1.5 rounded-md bg-[#e66a4a] px-3 py-1.5 text-xs text-white shadow-sm transition hover:bg-[#ff7b5c]">
-                    <span class="material-symbols-outlined text-[15px]">add</span>
-                    Add CID
-                </button>
-                <button type="button" @click="showCreateGamasModal = true" class="inline-flex items-center gap-1.5 rounded-md bg-white hover:bg-gray-100 px-3 py-1.5 text-xs text-gray-900 shadow-sm transition">
-                    <span class="material-symbols-outlined text-[15px]">add</span>
-                    Add GAMAS
-                </button>
-                <button type="button" @click="showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-md border border-white/5 bg-white/5 px-3 py-1.5 text-xs text-white transition hover:bg-white/10">
-                    <span class="material-symbols-outlined text-[15px]">add</span>
-                    Add Ticket
-                </button>
+                @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                    <button type="button" @click="showCidModal = true" class="inline-flex items-center gap-1.5 rounded-md bg-[#e66a4a] px-3 py-1.5 text-xs text-white shadow-sm transition hover:bg-[#ff7b5c]">
+                        <span class="material-symbols-outlined text-[15px]">add</span>
+                        Add CID
+                    </button>
+                    <button type="button" @click="showCreateGamasModal = true" class="inline-flex items-center gap-1.5 rounded-md bg-white hover:bg-gray-100 px-3 py-1.5 text-xs text-gray-900 shadow-sm transition">
+                        <span class="material-symbols-outlined text-[15px]">add</span>
+                        Add GAMAS
+                    </button>
+                    <button type="button" @click="showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-md border border-white/5 bg-white/5 px-3 py-1.5 text-xs text-white transition hover:bg-white/10">
+                        <span class="material-symbols-outlined text-[15px]">add</span>
+                        Add Ticket
+                    </button>
+                @endif
                 <div class="flex rounded-lg border border-white/5 bg-[#1a1a1a] p-1">
                     @php $filter = request('filter', 'month'); @endphp
                     <a href="{{ route('dashboard', ['filter' => 'day']) }}" 

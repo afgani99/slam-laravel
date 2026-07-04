@@ -24,10 +24,12 @@
                         <p class="text-xs text-neutral-500">Cari berdasarkan nomor tiket, CID, pelanggan, atau status</p>
                     </div>
                 </div>
-                <button type="button" @click="showTicketModal = true" class="slam-primary-btn shrink-0">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                    Buat Ticket
-                </button>
+                @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                    <button type="button" @click="showTicketModal = true" class="slam-primary-btn shrink-0">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Buat Ticket
+                    </button>
+                @endif
             </div>
 
             <form method="GET" action="{{ route('tickets.index') }}"
@@ -112,7 +114,9 @@
                             <th class="px-6 py-4 font-medium">Kasus</th>
                             <th class="px-6 py-4 font-medium">Status</th>
                             <th class="px-6 py-4 font-medium">Mulai</th>
-                            <th class="px-6 py-4 text-right font-medium">Aksi</th>
+                            @if(auth()->user()->role === 'admin')
+                                <th class="px-6 py-4 text-right font-medium">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
@@ -136,20 +140,22 @@
                                 <td class="px-6 py-4 text-neutral-300">{{ $ticket->case_type }}</td>
                                 <td class="px-6 py-4">@include('tickets._status-badge', ['status' => $ticket->status])</td>
                                 <td class="px-6 py-4 text-neutral-400">{{ $ticket->started_at?->format('d M H:i') }}</td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <form action="{{ route('tickets.destroy', $ticket) }}" method="POST"
-                                            onsubmit="return confirm('Hapus ticket ini?')" class="inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
-                                                title="Hapus Ticket">
-                                                <span class="material-symbols-outlined text-[14px]">delete</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
+                                @if(auth()->user()->role === 'admin')
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <form action="{{ route('tickets.destroy', $ticket) }}" method="POST"
+                                                onsubmit="return confirm('Hapus ticket ini?')" class="inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
+                                                    title="Hapus Ticket">
+                                                    <span class="material-symbols-outlined text-[14px]">delete</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>

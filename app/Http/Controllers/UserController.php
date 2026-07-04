@@ -13,14 +13,21 @@ class UserController extends Controller
 {
     use LogsActivity;
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->route('profile.edit');
+        }
+
         $roles = User::ROLES;
         return view('settings.users.create', compact('roles'));
     }
 
     public function store(Request $request): RedirectResponse
     {
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->route('profile.edit');
+        }
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -40,14 +47,21 @@ class UserController extends Controller
         return redirect()->route('settings.index')->with('success', 'User berhasil ditambahkan.');
     }
 
-    public function edit(User $user): View
+    public function edit(User $user): View|RedirectResponse
     {
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->route('profile.edit');
+        }
+
         $roles = User::ROLES;
         return view('settings.users.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, User $user): RedirectResponse
     {
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->route('profile.edit');
+        }
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
@@ -70,6 +84,9 @@ class UserController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
+        if (auth()->user()->role !== 'admin') {
+            return redirect()->route('profile.edit');
+        }
         if ($user->id === auth()->id()) {
             return back()->with('error', 'Anda tidak dapat menghapus akun sendiri.');
         }

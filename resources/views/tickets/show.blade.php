@@ -20,33 +20,37 @@
                     </div>
                     <div class="flex items-center gap-2">
                         @if (! $ticket->isClosed())
-                            {{-- Edit Button --}}
-                            <button type="button" @click="modalAction = 'edit'; showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-lg border border-white/5 bg-white/5 px-3 py-1.5 text-xs text-white transition hover:bg-white/10">
-                                <span class="material-symbols-outlined text-[15px]">edit</span>
-                                Edit
-                            </button>
+                            @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                                {{-- Edit Button --}}
+                                <button type="button" @click="modalAction = 'edit'; showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-lg border border-white/5 bg-white/5 px-3 py-1.5 text-xs text-white transition hover:bg-white/10">
+                                    <span class="material-symbols-outlined text-[15px]">edit</span>
+                                    Edit
+                                </button>
 
-                            {{-- Pending / Resume Button --}}
-                            @if (!$ticket->isPending())
-                                <button type="button" @click="modalAction = 'pending'; showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-lg border border-orange-900/30 bg-orange-900/10 px-3 py-1.5 text-xs text-orange-400 transition hover:bg-orange-900/20">
-                                    <span class="material-symbols-outlined text-[15px]">pause</span>
-                                    Set Pending
-                                </button>
-                            @else
-                                <button type="button" @click="modalAction = 'resume'; showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-lg border border-emerald-900/30 bg-emerald-900/10 px-3 py-1.5 text-xs text-emerald-400 transition hover:bg-emerald-900/20">
-                                    <span class="material-symbols-outlined text-[15px]">play_arrow</span>
-                                    Lanjutkan
-                                </button>
+                                {{-- Pending / Resume Button --}}
+                                @if (!$ticket->isPending())
+                                    <button type="button" @click="modalAction = 'pending'; showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-lg border border-orange-900/30 bg-orange-900/10 px-3 py-1.5 text-xs text-orange-400 transition hover:bg-orange-900/20">
+                                        <span class="material-symbols-outlined text-[15px]">pause</span>
+                                        Set Pending
+                                    </button>
+                                @else
+                                    <button type="button" @click="modalAction = 'resume'; showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-lg border border-emerald-900/30 bg-emerald-900/10 px-3 py-1.5 text-xs text-emerald-400 transition hover:bg-emerald-900/20">
+                                        <span class="material-symbols-outlined text-[15px]">play_arrow</span>
+                                        Lanjutkan
+                                    </button>
+                                @endif
                             @endif
 
                             {{-- Delete Button --}}
-                            <form method="POST" action="{{ route('tickets.destroy', $ticket) }}" onsubmit="return confirm('Hapus ticket ini?')" class="inline-block">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-red-900/30 bg-red-900/10 px-3 py-1.5 text-xs text-red-400 transition hover:bg-red-900/20">
-                                    <span class="material-symbols-outlined text-[15px]">delete</span>
-                                    Hapus
-                                </button>
-                            </form>
+                            @if(auth()->user()->role === 'admin')
+                                <form method="POST" action="{{ route('tickets.destroy', $ticket) }}" onsubmit="return confirm('Hapus ticket ini?')" class="inline-block">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-red-900/30 bg-red-900/10 px-3 py-1.5 text-xs text-red-400 transition hover:bg-red-900/20">
+                                        <span class="material-symbols-outlined text-[15px]">delete</span>
+                                        Hapus
+                                    </button>
+                                </form>
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -116,28 +120,32 @@
                             <th class="px-2 py-2">Mulai</th>
                             <th class="px-2 py-2">Selesai</th>
                             <th class="px-2 py-2">Catatan</th>
-                            <th class="px-2 py-2">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-white/5">
+                            @if(auth()->user()->role === 'admin')
+                                <th class="px-2 py-2">Aksi</th>
+                            @endif
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
                         @forelse ($ticket->pendingIntervals as $i)
                             <tr>
                                 <td class="px-2 py-2">{{ $i->started_at?->format('d M H:i') }}</td>
                                 <td class="px-2 py-2">{{ $i->ended_at?->format('d M H:i') ?: '-' }}</td>
                                 <td class="px-2 py-2">{{ $i->note ?: '-' }}</td>
-                                <td class="px-2 py-2">
-                                    <div class="flex items-center gap-2">
-                                        <form action="{{ route('tickets.pending-intervals.destroy', $i) }}" method="POST" onsubmit="return confirm('Hapus interval pending ini?')" class="inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
-                                                title="Hapus Pending">
-                                                <span class="material-symbols-outlined text-[14px]">delete</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
+                                @if(auth()->user()->role === 'admin')
+                                    <td class="px-2 py-2">
+                                        <div class="flex items-center gap-2">
+                                            <form action="{{ route('tickets.pending-intervals.destroy', $i) }}" method="POST" onsubmit="return confirm('Hapus interval pending ini?')" class="inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
+                                                    title="Hapus Pending">
+                                                    <span class="material-symbols-outlined text-[14px]">delete</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr><td colspan="4" class="px-2 py-4 text-center">No history</td></tr>

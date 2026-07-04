@@ -21,10 +21,12 @@
                         <p class="text-xs text-neutral-500">Cari berdasarkan CID, vendor, pelanggan, atau service</p>
                     </div>
                 </div>
-                <button @click="showCidModal = true" class="slam-primary-btn shrink-0">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                    Tambah CID
-                </button>
+                @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                    <button @click="showCidModal = true" class="slam-primary-btn shrink-0">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Tambah CID
+                    </button>
+                @endif
             </div>
 
 
@@ -118,22 +120,26 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <div class="flex justify-center items-center gap-2">
-                                        <button @click="ticketCidId = {{ $cid->id }}; ticketCidCid = @js($cid->cid); ticketCidIs = @js($cid->cid_is); ticketCidVendor = @js($cid->vendor_name); ticketCidCustomer = @js($cid->customer_name); ticketCidService = @js($cid->service); showTicketModal = true" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Tambah Tiket" aria-label="Tambah Tiket">
-                                            <span class="material-symbols-outlined text-[14px]">add_circle</span>
-                                        </button>
-                                        <button type="button" @click="editCid = { id: {{ $cid->id }}, cid: @js($cid->cid), cid_is: @js($cid->cid_is), vendor_name: @js($cid->vendor_name), customer_name: @js($cid->customer_name), service: @js($cid->service), sla_percentage: @js($cid->sla_percentage) }; showEditCidModal = true" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Edit CID" aria-label="Edit CID">
-                                            <span class="material-symbols-outlined text-[14px]">edit</span>
-                                        </button>
+                                        @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                                            <button @click="ticketCidId = {{ $cid->id }}; ticketCidCid = @js($cid->cid); ticketCidIs = @js($cid->cid_is); ticketCidVendor = @js($cid->vendor_name); ticketCidCustomer = @js($cid->customer_name); ticketCidService = @js($cid->service); showTicketModal = true" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Tambah Tiket" aria-label="Tambah Tiket">
+                                                <span class="material-symbols-outlined text-[14px]">add_circle</span>
+                                            </button>
+                                            <button type="button" @click="editCid = { id: {{ $cid->id }}, cid: @js($cid->cid), cid_is: @js($cid->cid_is), vendor_name: @js($cid->vendor_name), customer_name: @js($cid->customer_name), service: @js($cid->service), sla_percentage: @js($cid->sla_percentage) }; showEditCidModal = true" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Edit CID" aria-label="Edit CID">
+                                                <span class="material-symbols-outlined text-[14px]">edit</span>
+                                            </button>
+                                        @endif
                                         <a href="{{ route('cids.show', $cid) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Detail CID" aria-label="Detail CID">
                                             <span class="material-symbols-outlined text-[14px]">visibility</span>
                                         </a>
-                                        <form action="{{ route('cids.destroy', $cid) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus CID {{ $cid->cid }}?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400" title="Hapus CID" aria-label="Hapus CID">
-                                                <span class="material-symbols-outlined text-[14px]">delete</span>
-                                            </button>
-                                        </form>
+                                        @if(auth()->user()->role === 'admin')
+                                            <form action="{{ route('cids.destroy', $cid) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus CID {{ $cid->cid }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400" title="Hapus CID" aria-label="Hapus CID">
+                                                    <span class="material-symbols-outlined text-[14px]">delete</span>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

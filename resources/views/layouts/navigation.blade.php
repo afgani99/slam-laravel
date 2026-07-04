@@ -14,9 +14,14 @@
         ],
         'system' => [
             ['route' => 'activity-logs.index', 'params' => [], 'icon' => 'history', 'label' => 'Log Aktivitas'],
-            ['route' => 'settings.index', 'params' => [], 'icon' => 'settings', 'label' => 'Pengaturan'],
         ],
     ];
+
+    if (auth()->check() && auth()->user()->role === 'admin') {
+        $menuGroups['system'][] = ['route' => 'settings.index', 'params' => [], 'icon' => 'settings', 'label' => 'Pengaturan'];
+    } else {
+        $menuGroups['system'][] = ['route' => 'profile.edit', 'params' => [], 'icon' => 'settings', 'label' => 'Pengaturan'];
+    }
 
     if (! function_exists('slamNavActive')) {
         function slamNavActive($route, $params = [], $activePattern = null) {

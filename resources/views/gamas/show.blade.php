@@ -17,7 +17,7 @@
                     <p class="text-sm text-neutral-500">Data umum gangguan massal</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    @if (!$gamas->isClosed())
+                    @if (!$gamas->isClosed() && in_array(auth()->user()->role, ['admin', 'operator']))
                         <button type="button" @click="modalAction = 'edit'; showGamasModal = true" class="inline-flex items-center gap-1.5 rounded-lg border border-white/5 bg-white/5 px-3 py-1.5 text-xs text-white transition hover:bg-white/10">
                             <span class="material-symbols-outlined text-[15px]">edit</span>
                             Edit
@@ -94,7 +94,9 @@
                                     <th class="px-2 py-2">Mulai</th>
                                     <th class="px-2 py-2">Selesai</th>
                                     <th class="px-2 py-2">Catatan</th>
-                                    <th class="px-2 py-2">Aksi</th>
+                                    @if(auth()->user()->role === 'admin')
+                                        <th class="px-2 py-2">Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-white/5">
@@ -103,19 +105,21 @@
                                         <td class="px-2 py-2">{{ $interval['pending']->started_at->format('d M H:i') }}</td>
                                         <td class="px-2 py-2">{{ $interval['resume']?->started_at?->format('d M H:i') ?: '-' }}</td>
                                         <td class="px-2 py-2">{{ $interval['pending']->reason ?: '-' }}</td>
-                                        <td class="px-2 py-2">
-                                            <div class="flex items-center gap-2">
-                                                <form action="{{ route('gamas.logs.destroy', $interval['pending']) }}" method="POST" onsubmit="return confirm('Hapus interval pending ini?')" class="inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
-                                                        title="Hapus Pending">
-                                                        <span class="material-symbols-outlined text-[14px]">delete</span>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
+                                        @if(auth()->user()->role === 'admin')
+                                            <td class="px-2 py-2">
+                                                <div class="flex items-center gap-2">
+                                                    <form action="{{ route('gamas.logs.destroy', $interval['pending']) }}" method="POST" onsubmit="return confirm('Hapus interval pending ini?')" class="inline-block">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
+                                                            title="Hapus Pending">
+                                                            <span class="material-symbols-outlined text-[14px]">delete</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -156,7 +160,7 @@
                                             <a href="{{ route('tickets.show', $ticket) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Detail Ticket">
                                                 <span class="material-symbols-outlined text-[14px]">visibility</span>
                                             </a>
-                                            @if (!$gamas->isClosed())
+                                            @if (!$gamas->isClosed() && auth()->user()->role === 'admin')
                                                 <form action="{{ route('gamas.tickets.destroy', [$gamas, $ticket]) }}" method="POST" onsubmit="return confirm('Hapus tiket ini dari GAMAS?')" class="inline-block">
                                                     @csrf
                                                     @method('DELETE')
@@ -189,10 +193,10 @@
                                 <th class="px-2 py-2">Pelanggan</th>
                                 <th class="px-2 py-2">Selesai</th>
                                 <th class="px-2 py-2 text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5">
-                            @foreach ($closedTickets as $ticket)
+                                </tr>
+                                </thead>
+                                <tbody class="divide-y divide-white/5">
+                                @foreach ($closedTickets as $ticket)
                                 <tr>
                                     <td class="px-2 py-2">
                                         <a href="{{ route('tickets.show', $ticket) }}" class="font-medium text-orange-400 hover:text-orange-300">{{ $ticket->ticket_number }}</a>
@@ -206,15 +210,24 @@
                                             <a href="{{ route('tickets.show', $ticket) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" title="Detail Ticket">
                                                 <span class="material-symbols-outlined text-[14px]">visibility</span>
                                             </a>
+                                            @if (auth()->user()->role === 'admin')
+                                                <form action="{{ route('gamas.tickets.destroy', [$gamas, $ticket]) }}" method="POST" onsubmit="return confirm('Hapus tiket ini dari GAMAS?')" class="inline-block">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400" title="Hapus Ticket">
+                                                        <span class="material-symbols-outlined text-[14px]">delete</span>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        @endif
+                                @endforeach
+                                </tbody>
+                                </table>
+                                </div>
+                                </div>
+                                @endif
 
         <!-- Edit / Close / Pending Modal -->
         <div x-show="showGamasModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4" x-transition:enter="transition duration-200 ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-on:keydown.escape.window="showGamasModal = false">

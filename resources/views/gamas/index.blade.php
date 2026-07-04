@@ -22,10 +22,12 @@
                         <p class="text-xs text-neutral-500">Cari berdasarkan nomor GAMAS, vendor, case type, CID, atau pelanggan</p>
                     </div>
                 </div>
-                <button @click="showCreateGamasModal = true" class="slam-primary-btn shrink-0">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                    Buat GAMAS
-                </button>
+                @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                    <button @click="showCreateGamasModal = true" class="slam-primary-btn shrink-0">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Buat GAMAS
+                    </button>
+                @endif
             </div>
 
             <form method="GET" action="{{ route('gamas.index') }}" class="mt-5 grid gap-3 lg:grid-cols-[1fr_110px_155px] lg:items-end">
@@ -97,7 +99,9 @@
                             <th class="px-6 py-4 font-medium">Status</th>
                             <th class="px-6 py-4 text-center font-medium">Tiket</th>
                             <th class="px-6 py-4 font-medium">Selesai</th>
-                            <th class="px-6 py-4 text-right font-medium">Aksi</th>
+                            @if(auth()->user()->role === 'admin')
+                                <th class="px-6 py-4 text-right font-medium">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
@@ -123,19 +127,22 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-neutral-400">{{ $gamas->finished_at?->format('d M H:i') ?: '-' }}</td>
-                                <td class="px-6 py-4 text-right">
-                                    <form action="{{ route('gamas.destroy', $gamas) }}" method="POST"
-                                          onsubmit="return confirm('Hapus GAMAS ini dan semua tiket terkait?')"
-                                          class="inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
-                                                title="Hapus GAMAS" aria-label="Hapus GAMAS">
-                                            <span class="material-symbols-outlined text-[14px]">delete</span>
-                                        </button>
-                                    </form>
-                                </td>
+                                @if(auth()->user()->role === 'admin')
+                                    <td class="px-6 py-4 text-right">
+                                        <form action="{{ route('gamas.destroy', $gamas) }}" method="POST"
+                                              onsubmit="return confirm('Hapus GAMAS ini dan semua tiket terkait?')"
+                                              class="inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
+                                                    title="Hapus GAMAS" aria-label="Hapus GAMAS">
+                                                <span class="material-symbols-outlined text-[14px]">delete</span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                @endif
+                                
                             </tr>
                         @empty
                             <tr>
