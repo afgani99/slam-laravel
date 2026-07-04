@@ -93,6 +93,8 @@ class GamasController extends Controller
             return $gamas;
         });
 
+        $this->logActivity('create', 'Membuat GAMAS '.$gamas->gamas_number, $gamas);
+
         return redirect()
             ->route('gamas.show', $gamas)
             ->with('success', 'GAMAS berhasil dibuat dengan '.count($validated['cid_ids']).' tiket.');

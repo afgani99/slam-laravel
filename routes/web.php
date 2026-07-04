@@ -5,10 +5,12 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GamasController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SlaMonthlyController;
 use App\Http\Controllers\SlaRestitutionController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketStatusController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
@@ -39,6 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/sla/monthly', SlaMonthlyController::class)->name('sla.monthly');
     Route::get('/sla/restitution', SlaRestitutionController::class)->name('sla.restitution');
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::resource('users', UserController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
 });
 
 require __DIR__.'/auth.php';
