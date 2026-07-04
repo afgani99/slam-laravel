@@ -50,6 +50,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <x-dropdown-link :href="route('profile.edit')">
                                             <div class="flex items-center gap-2">
                                                 <span class="material-symbols-outlined text-sm">settings</span>

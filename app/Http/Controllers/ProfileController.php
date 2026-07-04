@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
+use App\Support\LogsActivity;
+
 class ProfileController extends Controller
 {
+    use LogsActivity;
     /**
      * Display the user's profile form.
      */
@@ -26,15 +29,28 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        // Handle password change if provided
+        if ($request->filled('current_password')) {
+            $validated = $request->validate([
+                'current_password' => ['required', 'current_password'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
+            
+            $user->password = \Illuminate\Support\Facades\Hash::make($validated['password']);
+        }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $user->save();
+
+        $this->logActivity('Update', 'User memperbarui profil: ' . $user->name, $user);
+
+        return Redirect::back()->with('success', 'Profil berhasil diperbarui.');
     }
 
     /**

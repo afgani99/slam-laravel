@@ -30,6 +30,11 @@
                 }
             }
 
+            // Special handling for profile page to keep Settings active
+            if (request()->routeIs('profile.edit') && $route === 'settings.index') {
+                return true;
+            }
+
             if (! request()->routeIs($pattern)) {
                 return false;
             }
