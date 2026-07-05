@@ -8,6 +8,7 @@ return [
     'ticket_pending' => 'Ticket berhasil diubah ke pending.',
     'ticket_resumed' => 'Ticket berhasil dilanjutkan.',
     'ticket_closed' => 'Ticket berhasil ditutup.',
+    'ticket_reopened' => 'Ticket berhasil dibuka kembali menjadi open.',
     'ticket_pending_interval_deleted' => 'Interval pending berhasil dihapus.',
 
     'cid_created' => 'CID berhasil ditambahkan.',

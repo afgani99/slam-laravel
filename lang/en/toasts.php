@@ -8,6 +8,7 @@ return [
     'ticket_pending' => 'Ticket changed to pending.',
     'ticket_resumed' => 'Ticket resumed successfully.',
     'ticket_closed' => 'Ticket closed successfully.',
+    'ticket_reopened' => 'Ticket reopened successfully.',
     'ticket_pending_interval_deleted' => 'Pending interval deleted successfully.',
 
     'cid_created' => 'CID added successfully.',

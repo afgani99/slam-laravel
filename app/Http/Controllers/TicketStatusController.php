@@ -67,4 +67,24 @@ class TicketStatusController extends Controller
             ->route('tickets.show', $ticket)
             ->with('success', __('toasts.ticket_closed'));
     }
+
+    public function reopen(Ticket $ticket): RedirectResponse
+    {
+        if ($ticket->status !== Ticket::STATUS_CLOSED) {
+            return back()->with('error', 'Only closed tickets can be reopened.');
+        }
+
+        $ticket->update([
+            'status' => Ticket::STATUS_OPEN,
+            'closed_at' => null,
+            'finished_at' => null,
+            'rfo_action' => null,
+        ]);
+
+        $this->logActivity('reopen', 'activity_logs.log_ticket_reopen', $ticket, ['number' => $ticket->ticket_number]);
+
+        return redirect()
+            ->route('tickets.show', $ticket)
+            ->with('success', __('toasts.ticket_reopened'));
+    }
 }

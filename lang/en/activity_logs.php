@@ -22,6 +22,7 @@ return [
     'no_data' => 'No activity logs yet.',
 
     // Log Messages
+    'log_ticket_reopen' => 'Reopening ticket :number',
     'log_create_ticket' => 'Creating ticket :number',
     'log_update_ticket' => 'Updating ticket :number',
     'log_delete_ticket' => 'Deleting ticket :number',

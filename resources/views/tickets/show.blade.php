@@ -198,7 +198,7 @@
                         </div>
                     </div>
                     <div class="mt-6 flex items-center justify-end gap-3 border-t border-white/5 pt-4">
-                        <button type="submit" class="rounded-lg bg-orange-600 px-4 py-2 text-xs font-semibold text-white">{{ __('tickets.save_ticket') }}</button>
+                        <button type="submit" class="slam-primary-btn px-6 py-2 text-xs font-medium">{{ __('tickets.save_ticket') }}</button>
                         <button type="button" @click="
                             const finished = document.getElementById('edit_finished_at').value;
                             const rfo = document.getElementById('edit_rfo_action').value;
@@ -206,7 +206,7 @@
                             document.getElementById('close_finished_at').value = finished;
                             document.getElementById('close_rfo_action').value = rfo;
                             document.getElementById('closeForm').submit();
-                        " class="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white">{{ __('tickets.close_ticket') }}</button>
+                        " class="slam-primary-btn bg-blue-600 hover:bg-blue-500 px-6 py-2 text-xs font-medium">{{ __('tickets.close_ticket') }}</button>
                     </div>
                 </form>
 
@@ -222,7 +222,7 @@
                         <textarea id="close_rfo_action" name="rfo_action" rows="3" class="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-xs text-white" required></textarea>
                     </div>
                     <div class="flex justify-end gap-3 pt-4">
-                        <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white">{{ __('tickets.close_ticket') }}</button>
+                        <button type="submit" class="slam-primary-btn bg-blue-600 hover:bg-blue-500 px-6 py-2 text-xs font-medium">{{ __('tickets.close_ticket') }}</button>
                     </div>
                 </form>
 
@@ -238,7 +238,7 @@
                         <textarea name="note" rows="3" class="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-xs text-white"></textarea>
                     </div>
                     <div class="flex justify-end gap-3 pt-4">
-                        <button type="submit" class="rounded-lg bg-orange-600 px-4 py-2 text-xs font-semibold text-white">{{ __('tickets.set_pending') }}</button>
+                        <button type="submit" class="slam-primary-btn bg-orange-600 hover:bg-orange-500 px-6 py-2 text-xs font-medium">{{ __('tickets.set_pending') }}</button>
                     </div>
                 </form>
 
@@ -250,7 +250,7 @@
                         <input name="ended_at" type="datetime-local" class="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-xs text-white" required>
                     </div>
                     <div class="flex justify-end gap-3 pt-4">
-                        <button type="submit" class="rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white">{{ __('tickets.resume') }}</button>
+                        <button type="submit" class="slam-primary-btn bg-emerald-600 hover:bg-emerald-500 px-6 py-2 text-xs font-medium">{{ __('tickets.resume') }}</button>
                     </div>
                 </form>
             </div>

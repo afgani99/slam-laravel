@@ -72,26 +72,56 @@
             </section>
 
             <aside class="space-y-4">
-                @foreach ([
-                    ['icon' => 'translate', 'title' => __('settings.lang_setting'), 'description' => __('settings.lang_desc'), 'value' => __('settings.coming_soon')],
-                    ['icon' => 'routine', 'title' => __('settings.theme_setting'), 'description' => __('settings.theme_desc'), 'value' => __('settings.coming_soon')],
-                    ['icon' => 'database', 'title' => __('settings.backup_setting'), 'description' => __('settings.backup_desc'), 'value' => __('settings.coming_soon')],
-                ] as $item)
                     <div class="slam-panel p-5 opacity-80">
                         <div class="flex items-start gap-3">
                             <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/5 ring-1 ring-white/10">
-                                <span class="material-symbols-outlined text-[18px] text-neutral-400">{{ $item['icon'] }}</span>
+                                <span class="material-symbols-outlined text-[18px] text-neutral-400">translate</span>
                             </div>
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center justify-between gap-3">
-                                    <p class="text-sm font-medium text-white">{{ $item['title'] }}</p>
-                                    <span class="rounded-full border border-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] text-neutral-500">{{ $item['value'] }}</span>
+                                    <p class="text-sm font-medium text-white">{{ __('settings.lang_setting') }}</p>
+                                    <form method="POST" action="{{ route('locale.update') }}">
+                                        @csrf
+                                        <select name="locale" onchange="this.form.submit()" class="rounded-full border border-white/10 bg-[#262626] px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] text-neutral-300 focus:border-[#e66a4a] focus:ring-[#e66a4a]/20">
+                                            <option value="id" @selected(app()->getLocale() === 'id')>ID</option>
+                                            <option value="en" @selected(app()->getLocale() === 'en')>EN</option>
+                                        </select>
+                                    </form>
                                 </div>
-                                <p class="mt-1 text-xs text-neutral-500">{{ $item['description'] }}</p>
+                                <p class="mt-1 text-xs text-neutral-500">{{ __('settings.lang_desc') }}</p>
                             </div>
                         </div>
                     </div>
-                @endforeach
+
+                    <div class="slam-panel p-5 opacity-80">
+                        <div class="flex items-start gap-3">
+                            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                                <span class="material-symbols-outlined text-[18px] text-neutral-400">routine</span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-3">
+                                    <p class="text-sm font-medium text-white">{{ __('settings.theme_setting') }}</p>
+                                    <span class="rounded-full border border-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] text-neutral-500">{{ __('settings.coming_soon') }}</span>
+                                </div>
+                                <p class="mt-1 text-xs text-neutral-500">{{ __('settings.theme_desc') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slam-panel p-5 opacity-80">
+                        <div class="flex items-start gap-3">
+                            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                                <span class="material-symbols-outlined text-[18px] text-neutral-400">database</span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-3">
+                                    <p class="text-sm font-medium text-white">{{ __('settings.backup_setting') }}</p>
+                                    <span class="rounded-full border border-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] text-neutral-500">{{ __('settings.coming_soon') }}</span>
+                                </div>
+                                <p class="mt-1 text-xs text-neutral-500">{{ __('settings.backup_desc') }}</p>
+                            </div>
+                        </div>
+                    </div>
             </aside>
         </div>
 

@@ -143,6 +143,17 @@
                                 @if(auth()->user()->role === 'admin')
                                     <td class="px-6 py-4 text-right">
                                         <div class="flex items-center justify-end gap-2">
+                                            @if ($ticket->status === 'closed')
+                                                <form action="{{ route('tickets.reopen', $ticket) }}" method="POST"
+                                                    onsubmit="return confirm('{{ __('tickets.confirm_reopen') }}')" class="inline-block">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-[#28c840]/50 hover:bg-[#28c840]/20 hover:text-[#28c840]"
+                                                        title="{{ __('tickets.reopen') }}">
+                                                        <span class="material-symbols-outlined text-[14px]">lock_open</span>
+                                                    </button>
+                                                </form>
+                                            @endif
                                             <form action="{{ route('tickets.destroy', $ticket) }}" method="POST"
                                                 onsubmit="return confirm('{{ __('tickets.confirm_delete') }}')" class="inline-block">
                                                 @csrf

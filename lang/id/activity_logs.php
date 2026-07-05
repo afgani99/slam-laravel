@@ -22,6 +22,7 @@ return [
     'no_data' => 'Belum ada log aktivitas.',
 
     // Log Messages
+    'log_ticket_reopen' => 'Membuka kembali ticket :number',
     'log_create_ticket' => 'Membuat ticket :number',
     'log_update_ticket' => 'Memperbarui ticket :number',
     'log_delete_ticket' => 'Menghapus ticket :number',
