@@ -93,11 +93,11 @@ class GamasController extends Controller
             return $gamas;
         });
 
-        $this->logActivity('create', 'Membuat GAMAS '.$gamas->gamas_number, $gamas);
+        $this->logActivity('create', 'activity_logs.log_create_gamas', $gamas, ['number' => $gamas->gamas_number]);
 
         return redirect()
             ->route('gamas.show', $gamas)
-            ->with('success', 'GAMAS berhasil dibuat dengan '.count($validated['cid_ids']).' tiket.');
+            ->with('success', __('toasts.gamas_created', ['total' => count($validated['cid_ids'])]));
     }
 
     public function show(Gamas $gamas): View
@@ -225,9 +225,9 @@ class GamasController extends Controller
                 ]);
         });
 
-        $this->logActivity('update', 'Memperbarui GAMAS '.$gamas->gamas_number, $gamas);
+        $this->logActivity('update', 'activity_logs.log_update_gamas', $gamas, ['number' => $gamas->gamas_number]);
 
-        return redirect()->route('gamas.show', $gamas)->with('success', 'GAMAS berhasil diperbarui.');
+        return redirect()->route('gamas.show', $gamas)->with('success', __('toasts.gamas_updated'));
     }
 
     public function close(Request $request, Gamas $gamas): RedirectResponse
@@ -263,11 +263,11 @@ class GamasController extends Controller
                 });
         });
 
-        $this->logActivity('close', 'Menutup GAMAS '.$gamas->gamas_number, $gamas);
+        $this->logActivity('close', 'activity_logs.log_close_gamas', $gamas, ['number' => $gamas->gamas_number]);
 
         return redirect()
             ->route('gamas.show', $gamas)
-            ->with('success', 'GAMAS berhasil ditutup.');
+            ->with('success', __('toasts.gamas_closed'));
     }
 
     public function pending(Request $request, Gamas $gamas): RedirectResponse
@@ -300,9 +300,9 @@ class GamasController extends Controller
                 });
         });
 
-        $this->logActivity('pending', 'Mengubah GAMAS '.$gamas->gamas_number.' ke pending', $gamas);
+        $this->logActivity('pending', 'activity_logs.log_gamas_pending', $gamas, ['number' => $gamas->gamas_number]);
 
-        return redirect()->route('gamas.show', $gamas)->with('success', 'GAMAS di-pending.');
+        return redirect()->route('gamas.show', $gamas)->with('success', __('toasts.gamas_pending'));
     }
 
     public function resume(Request $request, Gamas $gamas): RedirectResponse
@@ -342,9 +342,9 @@ class GamasController extends Controller
                 });
         });
 
-        $this->logActivity('resume', 'Melanjutkan GAMAS '.$gamas->gamas_number, $gamas);
+        $this->logActivity('resume', 'activity_logs.log_gamas_resume', $gamas, ['number' => $gamas->gamas_number]);
 
-        return redirect()->route('gamas.show', $gamas)->with('success', 'GAMAS dilanjutkan.');
+        return redirect()->route('gamas.show', $gamas)->with('success', __('toasts.gamas_resumed'));
     }
 
     public function deleteLog(GamasLog $log): RedirectResponse
@@ -381,15 +381,15 @@ class GamasController extends Controller
             $log->delete();
         });
 
-        $this->logActivity('delete', 'Menghapus interval pending GAMAS '.$gamas->gamas_number, $gamas);
+        $this->logActivity('delete', 'activity_logs.log_delete_gamas_interval', $gamas, ['number' => $gamas->gamas_number]);
 
-        return redirect()->route('gamas.show', $gamas)->with('success', 'Interval pending berhasil dihapus.');
+        return redirect()->route('gamas.show', $gamas)->with('success', __('toasts.gamas_interval_deleted'));
     }
 
     public function removeTicket(Gamas $gamas, Ticket $ticket): RedirectResponse
     {
         if ($gamas->status === Gamas::STATUS_CLOSED) {
-            return back()->with('error', 'Tidak dapat menghapus tiket pada GAMAS yang sudah ditutup.');
+            return back()->with('error', __('toasts.gamas_ticket_remove_closed'));
         }
 
         $ticketNumber = $ticket->ticket_number;
@@ -398,15 +398,15 @@ class GamasController extends Controller
             $ticket->delete();
         });
 
-        $this->logActivity('delete', 'Menghapus ticket '.$ticketNumber.' dari GAMAS '.$gamas->gamas_number, $gamas);
+        $this->logActivity('delete', 'activity_logs.log_remove_ticket_from_gamas', $gamas, ['ticket' => $ticketNumber, 'gamas' => $gamas->gamas_number]);
 
-        return back()->with('success', 'Tiket berhasil dihapus dari GAMAS.');
+        return back()->with('success', __('toasts.gamas_ticket_removed'));
     }
 
     public function destroy(Gamas $gamas): RedirectResponse
     {
         $gamasNumber = $gamas->gamas_number;
-        $this->logActivity('delete', 'Menghapus GAMAS '.$gamasNumber, $gamas);
+        $this->logActivity('delete', 'activity_logs.log_delete_gamas', $gamas, ['number' => $gamasNumber]);
 
         DB::transaction(function () use ($gamas) {
             $gamas->tickets()->delete();
@@ -414,6 +414,6 @@ class GamasController extends Controller
             $gamas->delete();
         });
 
-        return redirect()->route('gamas.index')->with('success', 'GAMAS berhasil dihapus.');
+        return redirect()->route('gamas.index')->with('success', __('toasts.gamas_deleted'));
     }
 }

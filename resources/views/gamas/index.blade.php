@@ -4,8 +4,8 @@
             <span class="material-symbols-outlined text-[18px] text-[#e66a4a]">sensors</span>
         </div>
         <div>
-            <h2 class="text-[22px] font-semibold tracking-tight text-white">GAMAS</h2>
-            <p class="mt-1 text-sm text-neutral-500">Gangguan Massal — manage bulk incidents.</p>
+            <h2 class="text-[22px] font-semibold tracking-tight text-white">{{ __('gamas.title') }}</h2>
+            <p class="mt-1 text-sm text-neutral-500">{{ __('gamas.subtitle') }}</p>
         </div>
     </x-slot>
 
@@ -18,14 +18,14 @@
                         <span class="material-symbols-outlined text-[18px] text-[#e66a4a]">filter_alt</span>
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-white">Filter & Pencarian</p>
-                        <p class="text-xs text-neutral-500">Cari berdasarkan nomor GAMAS, vendor, case type, CID, atau pelanggan</p>
+                        <p class="text-sm font-medium text-white">{{ __('gamas.filter_title') }}</p>
+                        <p class="text-xs text-neutral-500">{{ __('gamas.filter_subtitle') }}</p>
                     </div>
                 </div>
                 @if(in_array(auth()->user()->role, ['admin', 'operator']))
                     <button @click="showCreateGamasModal = true" class="slam-primary-btn shrink-0">
                         <span class="material-symbols-outlined text-[18px]">add</span>
-                        Buat GAMAS
+                        {{ __('gamas.btn_create') }}
                     </button>
                 @endif
             </div>
@@ -33,30 +33,30 @@
             <form method="GET" action="{{ route('gamas.index') }}" class="mt-5 grid gap-3 lg:grid-cols-[1fr_110px_155px] lg:items-end">
                 {{-- Search Input --}}
                 <div class="flex flex-col gap-1.5">
-                    <x-input-label for="search" value="Pencarian" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
+                    <x-input-label for="search" :value="__('gamas.search_placeholder')" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
                     <div class="relative">
                         <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-neutral-500">search</span>
-                        <x-text-input id="search" name="search" type="search" class="block w-full pl-10" placeholder="Nomor GAMAS, vendor, case type…" :value="$search" />
+                        <x-text-input id="search" name="search" type="search" class="block w-full pl-10" :placeholder="__('gamas.search_placeholder')" :value="$search" />
                     </div>
                 </div>
 
                 {{-- Per Page --}}
                 <div class="flex flex-col gap-1.5">
-                    <x-input-label for="per_page" value="Tampilkan" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
+                    <x-input-label for="per_page" :value="__('gamas.per_page')" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
                     <select id="per_page" name="per_page"
                         class="block w-full rounded-xl border border-white/10 bg-[#262626] px-4 py-2.5 text-sm text-white transition focus:border-[#e66a4a] focus:outline-none focus:ring-2 focus:ring-[#e66a4a]/20">
                         @foreach ([10, 25, 50] as $option)
-                            <option value="{{ $option }}" @selected($perPage === $option)>{{ $option }} baris</option>
+                            <option value="{{ $option }}" @selected($perPage === $option)>{{ __('gamas.rows', ['count' => $option]) }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 {{-- Status --}}
                 <div class="flex flex-col gap-1.5">
-                    <x-input-label for="status" value="Status" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
+                    <x-input-label for="status" :value="__('gamas.status')" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
                     <select id="status" name="status"
                         class="block w-full rounded-xl border border-white/10 bg-[#262626] px-4 py-2.5 text-sm text-white transition focus:border-[#e66a4a] focus:outline-none focus:ring-2 focus:ring-[#e66a4a]/20">
-                        <option value="">Semua Status</option>
+                        <option value="">{{ __('gamas.all_status') }}</option>
                         @foreach (\App\Models\Gamas::STATUSES as $statusOption)
                             <option value="{{ $statusOption }}" {{ $status == $statusOption ? 'selected' : '' }}>
                                 {{ ucfirst($statusOption) }}
@@ -70,17 +70,17 @@
                     <button type="submit"
                         class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
                         <span class="material-symbols-outlined text-[16px]">tune</span>
-                        Terapkan Filter
+                        {{ __('gamas.apply_filter') }}
                     </button>
                     @if (request()->has('search'))
                         <a href="{{ route('gamas.index') }}"
                             class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/10 bg-transparent px-4 text-sm text-neutral-400 transition hover:border-white/20 hover:text-white active:scale-[0.97]">
                             <span class="material-symbols-outlined text-[16px]">restart_alt</span>
-                            Reset
+                            {{ __('gamas.reset') }}
                         </a>
                     @endif
                     <span class="ml-auto text-xs text-neutral-500">
-                        {{ $gamasList->total() }} data ditemukan
+                        {{ __('gamas.total_found', ['total' => $gamasList->total()]) }}
                     </span>
                 </div>
             </form>
@@ -92,15 +92,15 @@
                 <table class="w-full text-left text-sm">
                     <thead class="border-b border-white/5 bg-[#2a2a2a] text-[11px] uppercase tracking-[0.18em] text-neutral-500">
                         <tr>
-                            <th class="px-6 py-4 font-medium">Gamas #</th>
-                            <th class="px-6 py-4 font-medium">Vendor</th>
-                            <th class="px-6 py-4 font-medium">Case Type</th>
-                            <th class="px-6 py-4 font-medium">Mulai</th>
-                            <th class="px-6 py-4 font-medium">Status</th>
-                            <th class="px-6 py-4 text-center font-medium">Tiket</th>
-                            <th class="px-6 py-4 font-medium">Selesai</th>
+                            <th class="px-6 py-4 font-medium">{{ __('gamas.table_gamas') }}</th>
+                            <th class="px-6 py-4 font-medium">{{ __('gamas.table_vendor') }}</th>
+                            <th class="px-6 py-4 font-medium">{{ __('gamas.table_case') }}</th>
+                            <th class="px-6 py-4 font-medium">{{ __('gamas.table_started') }}</th>
+                            <th class="px-6 py-4 font-medium">{{ __('gamas.table_status') }}</th>
+                            <th class="px-6 py-4 text-center font-medium">{{ __('gamas.table_tickets') }}</th>
+                            <th class="px-6 py-4 font-medium">{{ __('gamas.table_finished') }}</th>
                             @if(auth()->user()->role === 'admin')
-                                <th class="px-6 py-4 text-right font-medium">Aksi</th>
+                                <th class="px-6 py-4 text-right font-medium">{{ __('gamas.table_action') }}</th>
                             @endif
                         </tr>
                     </thead>
@@ -130,13 +130,13 @@
                                 @if(auth()->user()->role === 'admin')
                                     <td class="px-6 py-4 text-right">
                                         <form action="{{ route('gamas.destroy', $gamas) }}" method="POST"
-                                              onsubmit="return confirm('Hapus GAMAS ini dan semua tiket terkait?')"
+                                              onsubmit="return confirm('{{ __('gamas.confirm_delete') }}')"
                                               class="inline-block">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
                                                     class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-red-900/50 hover:bg-red-900/20 hover:text-red-400"
-                                                    title="Hapus GAMAS" aria-label="Hapus GAMAS">
+                                                    title="{{ __('gamas.table_action') }}" aria-label="{{ __('gamas.table_action') }}">
                                                 <span class="material-symbols-outlined text-[14px]">delete</span>
                                             </button>
                                         </form>
@@ -150,7 +150,7 @@
                                     <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5">
                                         <span class="material-symbols-outlined text-2xl text-neutral-500">database_off</span>
                                     </div>
-                                    <p class="text-sm text-neutral-500">Belum ada data GAMAS.</p>
+                                    <p class="text-sm text-neutral-500">{{ __('gamas.no_data') }}</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -185,7 +185,7 @@
                             <span class="h-3 w-3 rounded-full bg-[#febc2e] ring-1 ring-black/20 opacity-60"></span>
                             <span class="h-3 w-3 rounded-full bg-[#28c840] ring-1 ring-black/20 opacity-60"></span>
                         </div>
-                        <h3 class="text-sm font-semibold text-white/80">Buat GAMAS</h3>
+                        <h3 class="text-sm font-semibold text-white/80">{{ __('modals.add_gamas_title') }}</h3>
                     </div>
 
                     {{-- Form --}}
@@ -195,15 +195,15 @@
 
                         <div class="grid gap-5 md:grid-cols-2">
                             <div>
-                                <x-input-label for="modal_vendor_ticket_number" value="Ticket ID Vendor" />
+                                <x-input-label for="modal_vendor_ticket_number" :value="__('cids.label_vendor_ticket_id')" />
                                 <x-text-input id="modal_vendor_ticket_number" name="vendor_ticket_number" type="text" class="mt-1 block w-full" :value="old('vendor_ticket_number')" />
                                 <x-input-error class="mt-2" :messages="$errors->get('vendor_ticket_number')" />
                             </div>
                             <div>
-                                <x-input-label for="modal_case_type" value="Kasus" />
+                                <x-input-label for="modal_case_type" :value="__('cids.label_case_type')" />
                                 <div class="relative mt-1">
                                     <select id="modal_case_type" name="case_type" class="block h-[42px] w-full appearance-none rounded-lg border border-neutral-700 bg-neutral-900 pr-10 text-neutral-100 shadow-sm focus:border-orange-500 focus:ring-orange-500/30" required>
-                                        <option value="" class="bg-neutral-900">Pilih kasus</option>
+                                        <option value="" class="bg-neutral-900">{{ __('modals.case_type_placeholder') }}</option>
                                         @foreach ($caseTypes as $caseType)
                                             <option value="{{ $caseType }}" class="bg-neutral-900" @selected(old('case_type') === $caseType)>{{ $caseType }}</option>
                                         @endforeach
@@ -213,14 +213,14 @@
                                 <x-input-error class="mt-2" :messages="$errors->get('case_type')" />
                             </div>
                             <div class="md:col-span-2">
-                                <x-input-label for="modal_started_at" value="Waktu Mulai" />
+                                <x-input-label for="modal_started_at" :value="__('modals.started_at')" />
                                 <x-text-input id="modal_started_at" name="started_at" type="datetime-local" class="mt-1 block w-full" :value="old('started_at')" required />
                                 <x-input-error class="mt-2" :messages="$errors->get('started_at')" />
                             </div>
                         </div>
 
                         <div class="mt-5">
-                            <x-input-label value="Pilih CID Terdampak" />
+                            <x-input-label :value="__('modals.select_affected_cid')" />
                             <p class="mt-1 text-xs text-neutral-500">Cari dan pilih CID yang terdampak gangguan ini.</p>
                             <div x-data='{
                                 search: "",
@@ -257,14 +257,14 @@
                                 }
                             }' class="mt-3 space-y-3">
                                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                                    <x-text-input type="text" x-model="search" placeholder="Cari CID / Nama Pelanggan / CID IS / Vendor / Service..." class="flex-1" autocomplete="off" />
+                                    <x-text-input type="text" x-model="search" :placeholder="__('modals.search_affected_cid')" class="flex-1" autocomplete="off" />
                                     <div class="flex gap-2">
-                                        <button type="button" @click="selectAll(filteredCids)" class="rounded-lg border border-white/5 bg-[#262626] px-3 py-1.5 text-[11px] text-neutral-400 hover:bg-[#2f2f2f] hover:text-white">Select All</button>
-                                        <button type="button" @click="deselectAll()" class="rounded-lg border border-white/5 bg-[#262626] px-3 py-1.5 text-[11px] text-neutral-400 hover:bg-[#2f2f2f] hover:text-white">Clear</button>
+                                        <button type="button" @click="selectAll(filteredCids)" class="rounded-lg border border-white/5 bg-[#262626] px-3 py-1.5 text-[11px] text-neutral-400 hover:bg-[#2f2f2f] hover:text-white">{{ __('modals.select_all') }}</button>
+                                        <button type="button" @click="deselectAll()" class="rounded-lg border border-white/5 bg-[#262626] px-3 py-1.5 text-[11px] text-neutral-400 hover:bg-[#2f2f2f] hover:text-white">{{ __('modals.clear_all') }}</button>
                                     </div>
                                 </div>
 
-                                <p class="text-xs text-neutral-500" x-text="selectedCids.length + ' CID terpilih'"></p>
+                                <p class="text-xs text-neutral-500" x-text="`{{ __('modals.cid_selected', ['count' => '']) }}`.replace(':count', selectedCids.length)"></p>
 
                                 <div class="max-h-[120px] overflow-auto rounded-lg border border-white/5">
                                     <template x-for="cid in filteredCids" :key="cid.id">
@@ -280,7 +280,7 @@
                                             <span class="text-[11px] text-neutral-500 shrink-0" x-text="cid.vendor_name || '-'"></span>
                                         </label>
                                     </template>
-                                    <p x-show="filteredCids.length === 0" class="px-4 py-8 text-center text-sm text-neutral-500">Tidak ditemukan CID.</p>
+                                    <p x-show="filteredCids.length === 0" class="px-4 py-8 text-center text-sm text-neutral-500">{{ __('modals.no_cid_found') }}</p>
                                 </div>
                             </div>
                             <x-input-error class="mt-2" :messages="$errors->get('cid_ids')" />
@@ -289,9 +289,9 @@
                         <div class="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">
                             <button type="submit" class="inline-flex h-[42px] items-center gap-2 rounded-xl bg-[#e66a4a] px-6 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
                                 <span class="material-symbols-outlined text-[18px]">bolt</span>
-                                Buat GAMAS
+                                {{ __('modals.save_gamas') }}
                             </button>
-                            <button type="button" @click="showCreateGamasModal = false" class="inline-flex h-[42px] items-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">Batal</button>
+                            <button type="button" @click="showCreateGamasModal = false" class="inline-flex h-[42px] items-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">{{ __('modals.btn_cancel') }}</button>
                         </div>
                     </form>
                 </div>

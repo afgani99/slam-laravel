@@ -4,19 +4,12 @@
             <span class="material-symbols-outlined text-[18px] text-[#e66a4a]">hub</span>
         </div>
         <div>
-            <h2 class="text-[22px] font-semibold tracking-tight text-white">Detail CID {{ $cid->cid }}</h2>
-            <p class="mt-1 text-sm text-neutral-500">Informasi master data dan ringkasan tiket CID.</p>
+            <h2 class="text-[22px] font-semibold tracking-tight text-white">{{ __('cid_show.title', ['cid' => $cid->cid]) }}</h2>
+            <p class="mt-1 text-sm text-neutral-500">{{ __('cid_show.subtitle') }}</p>
         </div>
     </x-slot>
 
     <div class="space-y-4">
-        @if (session('success'))
-            <div class="flex items-center gap-3 rounded-xl border border-emerald-500/15 bg-emerald-500/8 px-4 py-3 text-sm text-emerald-400">
-                <span class="material-symbols-outlined text-[20px]">check_circle</span>
-                {{ session('success') }}
-            </div>
-        @endif
-
         <div class="grid gap-4 lg:grid-cols-2">
             <!-- Detail CID Card -->
             <div class="rounded-2xl border border-white/5 bg-[#262626] p-4">
@@ -24,11 +17,11 @@
                     <div class="min-w-0 flex-1">
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="rounded-lg bg-[#e66a4a]/10 px-2.5 py-1 text-sm font-semibold text-[#e66a4a]">{{ $cid->cid }}</span>
-                            <span class="rounded-lg border border-white/5 bg-[#1f1f1f] px-2.5 py-1 text-xs text-neutral-300">SLA {{ number_format((float) $cid->sla_percentage, 2) }}%</span>
+                            <span class="rounded-lg border border-white/5 bg-[#1f1f1f] px-2.5 py-1 text-xs text-neutral-300">{{ __('cid_show.sla_label') }} {{ number_format((float) $cid->sla_percentage, 2) }}%</span>
                         </div>
                         <div class="mt-4 space-y-2.5">
                             <div>
-                                <p class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">CID IS</p>
+                                <p class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">{{ __('cid_show.cid_is') }}</p>
                                 <p class="mt-0.5 text-sm font-medium text-white">
                                     @if($cid->cid_is)
                                         <a href="https://isn.nusa.net.id/customer.php?custId={{ $cid->cid_is }}&pid=profile&module=customer" target="_blank" class="text-[#e66a4a] transition hover:text-[#ff7b5c] hover:underline">
@@ -40,15 +33,15 @@
                                 </p>
                             </div>
                             <div>
-                                <p class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Vendor</p>
+                                <p class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">{{ __('cid_show.vendor') }}</p>
                                 <p class="mt-0.5 text-sm font-medium text-white">{{ $cid->vendor_name }}</p>
                             </div>
                             <div>
-                                <p class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Pelanggan</p>
+                                <p class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">{{ __('cid_show.customer') }}</p>
                                 <p class="mt-0.5 text-sm font-medium text-white">{{ $cid->customer_name }}</p>
                             </div>
                             <div>
-                                <p class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Service</p>
+                                <p class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">{{ __('cid_show.service') }}</p>
                                 <p class="mt-0.5 text-sm font-medium text-white">{{ $cid->service }}</p>
                             </div>
                         </div>
@@ -57,21 +50,21 @@
 
                 <div class="mt-4 grid grid-cols-3 gap-2 border-t border-white/5 pt-4">
                     <div class="rounded-lg border border-white/5 bg-[#1f1f1f] px-3 py-2 text-center">
-                        <p class="text-[10px] uppercase font-medium text-neutral-500">Open</p>
+                        <p class="text-[10px] uppercase font-medium text-neutral-500">{{ __('cid_show.status_open') }}</p>
                         <p class="mt-1 text-lg font-bold text-emerald-400">{{ $cid->open_tickets_count }}</p>
                     </div>
                     <div class="rounded-lg border border-white/5 bg-[#1f1f1f] px-3 py-2 text-center">
-                        <p class="text-[10px] uppercase font-medium text-neutral-500">Pending</p>
+                        <p class="text-[10px] uppercase font-medium text-neutral-500">{{ __('cid_show.status_pending') }}</p>
                         <p class="mt-1 text-lg font-bold text-yellow-400">{{ $cid->pending_tickets_count }}</p>
                     </div>
                     <div class="rounded-lg border border-white/5 bg-[#1f1f1f] px-3 py-2 text-center">
-                        <p class="text-[10px] uppercase font-medium text-neutral-500">Closed</p>
+                        <p class="text-[10px] uppercase font-medium text-neutral-500">{{ __('cid_show.status_closed') }}</p>
                         <p class="mt-1 text-lg font-bold text-blue-400">{{ $cid->closed_tickets_count }}</p>
                     </div>
                 </div>
 
                 <div class="mt-4 flex items-center justify-between border-t border-white/5 pt-4">
-                    <p class="text-xs text-neutral-500">Total Tiket</p>
+                    <p class="text-xs text-neutral-500">{{ __('cid_show.total_tickets') }}</p>
                     <p class="text-lg font-bold text-white">{{ $cid->tickets_count }}</p>
                 </div>
             </div>
@@ -80,8 +73,8 @@
             <div class="rounded-2xl border border-white/5 bg-[#262626] p-4">
                 <div class="flex items-center justify-between gap-3">
                     <div>
-                        <p class="text-base font-semibold text-white">Grafik SLA 6 Bulan</p>
-                        <p class="mt-0.5 text-xs text-neutral-500">Pencapaian SLA bulanan</p>
+                        <p class="text-base font-semibold text-white">{{ __('cid_show.chart_title') }}</p>
+                        <p class="mt-0.5 text-xs text-neutral-500">{{ __('cid_show.chart_subtitle') }}</p>
                     </div>
                     <a href="{{ route('cids.index') }}" class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 bg-[#1f1f1f] px-3 text-xs text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">
                         <span class="material-symbols-outlined text-[16px]">arrow_back</span>
@@ -97,11 +90,11 @@
         <div class="rounded-2xl border border-white/5 bg-[#262626] p-4">
             <div class="flex items-center justify-between gap-3 mb-4">
                 <div>
-                    <p class="text-base font-semibold text-white">Recent Ticket</p>
-                    <p class="mt-0.5 text-xs text-neutral-500">Riwayat tiket untuk CID ini</p>
+                    <p class="text-base font-semibold text-white">{{ __('cid_show.recent_tickets_title') }}</p>
+                    <p class="mt-0.5 text-xs text-neutral-500">{{ __('cid_show.recent_tickets_subtitle') }}</p>
                 </div>
                 @if ($recentTickets->count() >= 10)
-                    <a href="{{ route('tickets.index', ['search' => $cid->cid]) }}" class="rounded-lg border border-white/10 bg-[#1f1f1f] px-3 py-1.5 text-xs text-[#e66a4a] transition hover:bg-[#2f2f2f] hover:text-[#ff7b5c]">Show more →</a>
+                    <a href="{{ route('tickets.index', ['search' => $cid->cid]) }}" class="rounded-lg border border-white/10 bg-[#1f1f1f] px-3 py-1.5 text-xs text-[#e66a4a] transition hover:bg-[#2f2f2f] hover:text-[#ff7b5c]">{{ __('cid_show.show_more') }}</a>
                 @endif
             </div>
 
@@ -109,10 +102,10 @@
                 <table class="w-full text-left text-sm">
                     <thead class="border-b border-white/5 bg-[#2a2a2a] text-[10px] uppercase tracking-[0.16em] text-neutral-500">
                         <tr>
-                            <th class="px-4 py-3">Ticket</th>
-                            <th class="px-4 py-3">Kasus</th>
-                            <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3">Mulai</th>
+                            <th class="px-4 py-3">{{ __('cid_show.col_ticket') }}</th>
+                            <th class="px-4 py-3">{{ __('cid_show.col_case') }}</th>
+                            <th class="px-4 py-3">{{ __('cid_show.col_status') }}</th>
+                            <th class="px-4 py-3">{{ __('cid_show.col_started') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
@@ -127,7 +120,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-4 py-10 text-center text-sm text-neutral-500">Belum ada ticket.</td>
+                                <td colspan="4" class="px-4 py-10 text-center text-sm text-neutral-500">{{ __('cid_show.no_tickets') }}</td>
                             </tr>
                         @endforelse
                     </tbody>

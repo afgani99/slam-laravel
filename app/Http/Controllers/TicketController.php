@@ -84,11 +84,11 @@ class TicketController extends Controller
             'status' => Ticket::STATUS_OPEN,
         ]);
 
-        $this->logActivity('create', 'Membuat ticket '.$ticket->ticket_number, $ticket);
+        $this->logActivity('create', 'activity_logs.log_create_ticket', $ticket, ['number' => $ticket->ticket_number]);
 
         return redirect()
             ->route('tickets.index', ['status' => 'open'])
-            ->with('success', 'Ticket berhasil dibuat.');
+            ->with('success', __('toasts.ticket_created'));
     }
 
     public function show(Ticket $ticket): View
@@ -127,7 +127,7 @@ class TicketController extends Controller
         if ($ticket->isClosed()) {
             return redirect()
                 ->route('tickets.show', $ticket)
-                ->with('error', 'Ticket yang sudah closed tidak dapat diedit.');
+                ->with('error', __('toasts.ticket_closed_edit'));
         }
 
         $cids = Cid::orderBy('cid')->get();
@@ -143,11 +143,11 @@ class TicketController extends Controller
     {
         $ticket->update($request->validated());
 
-        $this->logActivity('update', 'Memperbarui ticket '.$ticket->ticket_number, $ticket);
+        $this->logActivity('update', 'activity_logs.log_update_ticket', $ticket, ['number' => $ticket->ticket_number]);
 
         return redirect()
             ->route('tickets.show', $ticket)
-            ->with('success', 'Ticket berhasil diperbarui.');
+            ->with('success', __('toasts.ticket_updated'));
     }
 
     public function destroy(Ticket $ticket): RedirectResponse
@@ -156,16 +156,16 @@ class TicketController extends Controller
         $isFromShowPage = $previousUrl && str_contains($previousUrl, "/tickets/{$ticket->id}") && !str_contains($previousUrl, 'index');
 
         $ticketNumber = $ticket->ticket_number;
-        $this->logActivity('delete', 'Menghapus ticket '.$ticketNumber, $ticket);
+        $this->logActivity('delete', 'activity_logs.log_delete_ticket', $ticket, ['number' => $ticketNumber]);
 
         $ticket->delete();
 
         if ($isFromShowPage) {
             return redirect()
                 ->route('tickets.index', ['status' => 'open'])
-                ->with('success', 'Ticket berhasil dihapus.');
+                ->with('success', __('toasts.ticket_deleted'));
         }
 
-        return back()->with('success', 'Ticket berhasil dihapus.');
+        return back()->with('success', __('toasts.ticket_deleted'));
     }
 }

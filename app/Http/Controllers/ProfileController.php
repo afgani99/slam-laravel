@@ -48,9 +48,9 @@ class ProfileController extends Controller
 
         $user->save();
 
-        $this->logActivity('Update', 'User memperbarui profil: ' . $user->name, $user);
+        $this->logActivity('Update', 'activity_logs.log_update_profile', $user, ['name' => $user->name]);
 
-        return Redirect::back()->with('success', 'Profil berhasil diperbarui.');
+        return Redirect::back()->with('success', __('toasts.profile_updated'));
     }
 
     /**

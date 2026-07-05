@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Bulk Incidents (GAMAS)',
+    'subtitle' => 'Manage bulk incidents.',
+    'filter_title' => 'Filter & Search',
+    'filter_subtitle' => 'Search by GAMAS number, vendor, case type, CID, or customer',
+    'btn_create' => 'Create GAMAS',
+    'search_placeholder' => 'GAMAS number, vendor, case type…',
+    'per_page' => 'Show',
+    'rows' => ':count rows',
+    'status' => 'Status',
+    'all_status' => 'All Status',
+    'apply_filter' => 'Apply Filter',
+    'reset' => 'Reset',
+    'total_found' => ':total data found',
+    'table_gamas' => 'GAMAS #',
+    'table_vendor' => 'Vendor',
+    'table_case' => 'Case Type',
+    'table_started' => 'Started',
+    'table_status' => 'Status',
+    'table_tickets' => 'Tickets',
+    'table_finished' => 'Finished',
+    'table_action' => 'Action',
+    'confirm_delete' => 'Delete this GAMAS and all related tickets?',
+    'no_data' => 'No GAMAS data found.',
+];

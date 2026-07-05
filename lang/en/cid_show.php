@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'CID Detail :cid',
+    'subtitle' => 'Master data information and ticket summary for this CID.',
+    'sla_label' => 'SLA',
+    'cid_is' => 'CID IS',
+    'vendor' => 'Vendor',
+    'customer' => 'Customer',
+    'service' => 'Service',
+    'status_open' => 'Open',
+    'status_pending' => 'Pending',
+    'status_closed' => 'Closed',
+    'total_tickets' => 'Total Tickets',
+    'chart_title' => '6-Month SLA Chart',
+    'chart_subtitle' => 'Monthly SLA achievement',
+    'recent_tickets_title' => 'Recent Tickets',
+    'recent_tickets_subtitle' => 'Ticket history for this CID',
+    'show_more' => 'Show more →',
+    'col_ticket' => 'Ticket',
+    'col_case' => 'Case',
+    'col_status' => 'Status',
+    'col_started' => 'Started',
+    'no_tickets' => 'No tickets found.',
+];

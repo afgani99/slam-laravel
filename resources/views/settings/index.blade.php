@@ -4,8 +4,8 @@
             <span class="material-symbols-outlined text-[18px] text-[#e66a4a]">settings</span>
         </div>
         <div>
-            <h2 class="text-[22px] font-semibold tracking-tight text-white">Pengaturan</h2>
-            <p class="mt-1 text-sm text-neutral-500">Kelola user dan konfigurasi sistem SLAM.</p>
+            <h2 class="text-[22px] font-semibold tracking-tight text-white">{{ __('settings.title') }}</h2>
+            <p class="mt-1 text-sm text-neutral-500">{{ __('settings.subtitle') }}</p>
         </div>
     </x-slot>
 
@@ -18,13 +18,13 @@
                             <span class="material-symbols-outlined text-[18px] text-[#e66a4a]">group</span>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-white">User Management</p>
-                            <p class="text-xs text-neutral-500">Tambah, edit, dan hapus user aplikasi.</p>
+                            <p class="text-sm font-medium text-white">{{ __('settings.user_management') }}</p>
+                            <p class="text-xs text-neutral-500">{{ __('settings.user_management_subtitle') }}</p>
                         </div>
                     </div>
                     <button type="button" @click="openCreateModal()" class="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
                         <span class="material-symbols-outlined text-[16px]">person_add</span>
-                        Tambah User
+                        {{ __('settings.add_user') }}
                     </button>
                 </div>
 
@@ -32,10 +32,10 @@
                     <table class="w-full text-left text-sm">
                         <thead class="border-b border-white/5 bg-[#2a2a2a] text-[11px] uppercase tracking-[0.18em] text-neutral-500">
                             <tr>
-                                <th class="px-4 py-3 font-medium">Nama</th>
-                                <th class="px-4 py-3 font-medium">Email</th>
-                                <th class="px-4 py-3 font-medium">Role</th>
-                                <th class="px-4 py-3 text-center font-medium">Aksi</th>
+                                <th class="px-4 py-3 font-medium">{{ __('settings.name') }}</th>
+                                <th class="px-4 py-3 font-medium">{{ __('settings.email') }}</th>
+                                <th class="px-4 py-3 font-medium">{{ __('settings.role') }}</th>
+                                <th class="px-4 py-3 text-center font-medium">{{ __('settings.action') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
@@ -48,13 +48,13 @@
                                     </td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center justify-center gap-2">
-                                            <button type="button" @click="openEditModal({{ json_encode($user) }})" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-[#262626] text-neutral-400 transition hover:border-[#e66a4a]/40 hover:text-[#e66a4a]" title="Edit User">
+                                            <button type="button" @click="openEditModal({{ json_encode($user) }})" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-[#262626] text-neutral-400 transition hover:border-[#e66a4a]/40 hover:text-[#e66a4a]" title="{{ __('settings.edit_user') }}">
                                                 <span class="material-symbols-outlined text-[16px]">edit</span>
                                             </button>
-                                            <form method="POST" action="{{ route('users.destroy', $user) }}" onsubmit="return confirm('Hapus user ini?')">
+                                            <form method="POST" action="{{ route('users.destroy', $user) }}" onsubmit="return confirm('{{ __('settings.confirm_delete') }}')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-[#262626] text-neutral-400 transition hover:border-red-500/40 hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-40" title="Hapus User" @disabled(auth()->id() === $user->id)>
+                                                <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-[#262626] text-neutral-400 transition hover:border-red-500/40 hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-40" title="{{ __('settings.delete_user') }}" @disabled(auth()->id() === $user->id)>
                                                     <span class="material-symbols-outlined text-[16px]">delete</span>
                                                 </button>
                                             </form>
@@ -63,7 +63,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-4 py-12 text-center text-sm text-neutral-500">Belum ada user.</td>
+                                    <td colspan="4" class="px-4 py-12 text-center text-sm text-neutral-500">{{ __('settings.no_users') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -73,9 +73,9 @@
 
             <aside class="space-y-4">
                 @foreach ([
-                    ['icon' => 'translate', 'title' => 'Setting Bahasa', 'description' => 'Pilihan bahasa aplikasi.', 'value' => 'Coming Soon'],
-                    ['icon' => 'routine', 'title' => 'Tema Dark / Light', 'description' => 'Pengaturan tema tampilan.', 'value' => 'Coming Soon'],
-                    ['icon' => 'database', 'title' => 'Backup & Import Database', 'description' => 'Download backup dan import database.', 'value' => 'Coming Soon'],
+                    ['icon' => 'translate', 'title' => __('settings.lang_setting'), 'description' => __('settings.lang_desc'), 'value' => __('settings.coming_soon')],
+                    ['icon' => 'routine', 'title' => __('settings.theme_setting'), 'description' => __('settings.theme_desc'), 'value' => __('settings.coming_soon')],
+                    ['icon' => 'database', 'title' => __('settings.backup_setting'), 'description' => __('settings.backup_desc'), 'value' => __('settings.coming_soon')],
                 ] as $item)
                     <div class="slam-panel p-5 opacity-80">
                         <div class="flex items-start gap-3">
@@ -100,36 +100,36 @@
                 <div class="w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl">
                     <div class="flex items-center border-b border-white/5 bg-[#242424] px-5 py-3">
                         <div class="flex items-center gap-2">
-                            <button type="button" @click="closeCreateModal()" class="h-3 w-3 rounded-full bg-[#ff5f57]" aria-label="Tutup"></button>
+                            <button type="button" @click="closeCreateModal()" class="h-3 w-3 rounded-full bg-[#ff5f57]" :aria-label="__('settings.cancel')"></button>
                             <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
                             <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
                         </div>
-                        <p class="flex-1 pr-[52px] text-center text-[13px] font-semibold text-neutral-200">Tambah User</p>
+                        <p class="flex-1 pr-[52px] text-center text-[13px] font-semibold text-neutral-200">{{ __('settings.add_user') }}</p>
                     </div>
 
                     <form method="POST" action="{{ route('users.store') }}" class="space-y-4 p-5" @submit="if (password.length < 8 || password !== passwordConfirmation) { $event.preventDefault(); }">
                         @csrf
                         <div>
-                            <x-input-label for="create_name" value="Nama" />
+                            <x-input-label for="create_name" :value="__('settings.name')" />
                             <x-text-input id="create_name" name="name" class="mt-1 block w-full" required />
                         </div>
                         <div>
-                            <x-input-label for="create_email" value="Email" />
+                            <x-input-label for="create_email" :value="__('settings.email')" />
                             <x-text-input id="create_email" name="email" type="email" class="mt-1 block w-full" required />
                         </div>
                         <div>
-                            <x-input-label for="create_password" value="Password" />
+                            <x-input-label for="create_password" :value="__('settings.password')" />
                             <x-text-input id="create_password" name="password" type="password" x-model="password" class="mt-1 block w-full" required />
-                            <p class="mt-2 text-xs text-neutral-500">Password minimal 8 karakter.</p>
-                            <p x-show="password && password.length < 8" x-cloak class="mt-1 text-xs text-red-400">Password masih kurang dari 8 karakter.</p>
+                            <p class="mt-2 text-xs text-neutral-500">{{ __('settings.password_min') }}</p>
+                            <p x-show="password && password.length < 8" x-cloak class="mt-1 text-xs text-red-400">{{ __('settings.password_too_short') }}</p>
                         </div>
                         <div>
-                            <x-input-label for="create_password_confirmation" value="Konfirmasi Password" />
+                            <x-input-label for="create_password_confirmation" :value="__('settings.password_confirmation')" />
                             <x-text-input id="create_password_confirmation" name="password_confirmation" type="password" x-model="passwordConfirmation" class="mt-1 block w-full" required />
-                            <p x-show="passwordConfirmation && password !== passwordConfirmation" x-cloak class="mt-2 text-xs text-red-400">Konfirmasi password tidak sama dengan password.</p>
+                            <p x-show="passwordConfirmation && password !== passwordConfirmation" x-cloak class="mt-2 text-xs text-red-400">{{ __('settings.password_mismatch') }}</p>
                         </div>
                         <div>
-                            <x-input-label for="create_role" value="Role" />
+                            <x-input-label for="create_role" :value="__('settings.role')" />
                             <select id="create_role" name="role" class="mt-1 block w-full rounded-xl border border-white/10 bg-[#262626] px-4 py-2.5 text-sm text-white focus:border-[#e66a4a] focus:ring-[#e66a4a]/20" required>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role }}">{{ ucfirst($role) }}</option>
@@ -137,8 +137,8 @@
                             </select>
                         </div>
                         <div class="flex justify-end gap-2 border-t border-white/5 pt-4">
-                            <button type="button" @click="closeCreateModal()" class="rounded-lg border border-white/10 px-4 py-2 text-sm text-neutral-400 transition hover:text-white">Batal</button>
-                            <button type="submit" :disabled="password.length < 8 || password !== passwordConfirmation" class="rounded-lg bg-[#e66a4a] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#ff7b5c] disabled:cursor-not-allowed disabled:opacity-50">Simpan</button>
+                            <button type="button" @click="closeCreateModal()" class="rounded-lg border border-white/10 px-4 py-2 text-sm text-neutral-400 transition hover:text-white">{{ __('settings.cancel') }}</button>
+                            <button type="submit" :disabled="password.length < 8 || password !== passwordConfirmation" class="rounded-lg bg-[#e66a4a] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#ff7b5c] disabled:cursor-not-allowed disabled:opacity-50">{{ __('settings.save') }}</button>
                         </div>
                     </form>
                 </div>
@@ -150,26 +150,26 @@
                 <div class="w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl">
                     <div class="flex items-center border-b border-white/5 bg-[#242424] px-5 py-3">
                         <div class="flex items-center gap-2">
-                            <button type="button" @click="closeEditModal()" class="h-3 w-3 rounded-full bg-[#ff5f57]" aria-label="Tutup"></button>
+                            <button type="button" @click="closeEditModal()" class="h-3 w-3 rounded-full bg-[#ff5f57]" :aria-label="__('settings.cancel')"></button>
                             <span class="h-3 w-3 rounded-full bg-[#febc2e]"></span>
                             <span class="h-3 w-3 rounded-full bg-[#28c840]"></span>
                         </div>
-                        <p class="flex-1 pr-[52px] text-center text-[13px] font-semibold text-neutral-200">Edit User</p>
+                        <p class="flex-1 pr-[52px] text-center text-[13px] font-semibold text-neutral-200">{{ __('settings.edit_user') }}</p>
                     </div>
 
                     <form method="POST" :action="`/users/${editUser.id}`" class="space-y-4 p-5" @submit="if ((editPassword || editPasswordConfirmation) && (editPassword.length < 8 || editPassword !== editPasswordConfirmation)) { $event.preventDefault(); }">
                         @csrf
                         @method('PUT')
                         <div>
-                            <x-input-label for="edit_name" value="Nama" />
+                            <x-input-label for="edit_name" :value="__('settings.name')" />
                             <x-text-input id="edit_name" name="name" x-model="editUser.name" class="mt-1 block w-full" required />
                         </div>
                         <div>
-                            <x-input-label for="edit_email" value="Email" />
+                            <x-input-label for="edit_email" :value="__('settings.email')" />
                             <x-text-input id="edit_email" name="email" type="email" x-model="editUser.email" class="mt-1 block w-full" required />
                         </div>
                         <div>
-                            <x-input-label for="edit_role" value="Role" />
+                            <x-input-label for="edit_role" :value="__('settings.role')" />
                             <select id="edit_role" name="role" x-model="editUser.role" class="mt-1 block w-full rounded-xl border border-white/10 bg-[#262626] px-4 py-2.5 text-sm text-white focus:border-[#e66a4a] focus:ring-[#e66a4a]/20" required>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role }}">{{ ucfirst($role) }}</option>
@@ -177,19 +177,19 @@
                             </select>
                         </div>
                         <div>
-                            <x-input-label for="edit_password" value="Password Baru (Opsional)" />
+                            <x-input-label for="edit_password" :value="__('settings.optional_password')" />
                             <x-text-input id="edit_password" name="password" type="password" x-model="editPassword" class="mt-1 block w-full" />
-                            <p class="mt-2 text-xs text-neutral-500">Minimal 8 karakter jika ingin diubah.</p>
-                            <p x-show="editPassword && editPassword.length < 8" x-cloak class="mt-1 text-xs text-red-400">Password minimal 8 karakter.</p>
+                            <p class="mt-2 text-xs text-neutral-500">{{ __('settings.optional_password_help') }}</p>
+                            <p x-show="editPassword && editPassword.length < 8" x-cloak class="mt-1 text-xs text-red-400">{{ __('settings.password_too_short') }}</p>
                         </div>
                         <div>
-                            <x-input-label for="edit_password_confirmation" value="Konfirmasi Password Baru" />
+                            <x-input-label for="edit_password_confirmation" :value="__('settings.confirm_new_password')" />
                             <x-text-input id="edit_password_confirmation" name="password_confirmation" type="password" x-model="editPasswordConfirmation" class="mt-1 block w-full" />
-                            <p x-show="editPasswordConfirmation && editPassword !== editPasswordConfirmation" x-cloak class="mt-2 text-xs text-red-400">Konfirmasi password tidak sama.</p>
+                            <p x-show="editPasswordConfirmation && editPassword !== editPasswordConfirmation" x-cloak class="mt-2 text-xs text-red-400">{{ __('settings.password_mismatch') }}</p>
                         </div>
                         <div class="flex justify-end gap-2 border-t border-white/5 pt-4">
-                            <button type="button" @click="closeEditModal()" class="rounded-lg border border-white/10 px-4 py-2 text-sm text-neutral-400 transition hover:text-white">Batal</button>
-                            <button type="submit" :disabled="(editPassword.length > 0 && editPassword.length < 8) || (editPassword !== editPasswordConfirmation)" class="rounded-lg bg-[#e66a4a] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#ff7b5c] disabled:cursor-not-allowed disabled:opacity-50">Simpan</button>
+                            <button type="button" @click="closeEditModal()" class="rounded-lg border border-white/10 px-4 py-2 text-sm text-neutral-400 transition hover:text-white">{{ __('settings.cancel') }}</button>
+                            <button type="submit" :disabled="(editPassword.length > 0 && editPassword.length < 8) || (editPassword !== editPasswordConfirmation)" class="rounded-lg bg-[#e66a4a] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#ff7b5c] disabled:cursor-not-allowed disabled:opacity-50">{{ __('settings.save') }}</button>
                         </div>
                     </form>
                 </div>

@@ -29,11 +29,7 @@ class SlaRestitutionController extends Controller
             });
         }
 
-        $months = [
-            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
-        ];
+        $months = __('sla_monthly.months');
 
         return view('sla.restitution', compact('results', 'year', 'month', 'months'));
     }
@@ -48,11 +44,7 @@ class SlaRestitutionController extends Controller
 
         $results = $slaService->getRestitutionCidsForPeriod($startDate, $endDate);
 
-        $months = [
-            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
-        ];
+        $months = __('sla_monthly.months');
 
         $period = $months[$month] . ' ' . $year;
         $filename = "Laporan_Restitusi_SLA_{$month}_{$year}.xlsx";

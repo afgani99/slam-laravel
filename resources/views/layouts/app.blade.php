@@ -29,9 +29,22 @@
                                 <button class="slam-header-btn">
                                     <span class="material-symbols-outlined text-[22px]">light_mode</span>
                                 </button>
-                                <button class="slam-header-btn text-[16px] font-medium leading-none">
-                                    US
-                                </button>
+                                
+                                <form method="POST" action="{{ route('locale.update') }}" class="m-0">
+                                    @csrf
+                                    @if(app()->getLocale() === 'en')
+                                        <input type="hidden" name="locale" value="id">
+                                        <button type="submit" class="slam-header-btn text-[16px] font-medium leading-none" title="Ubah ke Bahasa Indonesia">
+                                            ID
+                                        </button>
+                                    @else
+                                        <input type="hidden" name="locale" value="en">
+                                        <button type="submit" class="slam-header-btn text-[16px] font-medium leading-none" title="Switch to English">
+                                            EN
+                                        </button>
+                                    @endif
+                                </form>
+
                                 <x-dropdown align="right" width="56">
                                     <x-slot name="trigger">
                                         <button class="slam-header-btn">
@@ -54,13 +67,13 @@
                                         <x-dropdown-link :href="route('profile.edit')">
                                             <div class="flex items-center gap-2">
                                                 <span class="material-symbols-outlined text-sm">settings</span>
-                                                Profile Settings
+                                                {{ __('header.profile_settings') }}
                                             </div>
                                         </x-dropdown-link>
                                         <x-dropdown-link href="#">
                                             <div class="flex items-center gap-2">
                                                 <span class="material-symbols-outlined text-sm">dark_mode</span>
-                                                Toggle Theme
+                                                {{ __('header.toggle_theme') }}
                                             </div>
                                         </x-dropdown-link>
                                         <form method="POST" action="{{ route('logout') }}">
@@ -68,7 +81,7 @@
                                             <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="text-red-400 hover:text-red-300">
                                                 <div class="flex items-center gap-2">
                                                     <span class="material-symbols-outlined text-sm">logout</span>
-                                                    Log Out
+                                                    {{ __('header.logout') }}
                                                 </div>
                                             </x-dropdown-link>
                                         </form>

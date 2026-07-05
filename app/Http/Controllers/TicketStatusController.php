@@ -23,11 +23,11 @@ class TicketStatusController extends Controller
             ]);
         });
 
-        $this->logActivity('pending', 'Mengubah ticket '.$ticket->ticket_number.' ke pending', $ticket);
+        $this->logActivity('pending', 'activity_logs.log_ticket_pending', $ticket, ['number' => $ticket->ticket_number]);
 
         return redirect()
             ->route('tickets.show', $ticket)
-            ->with('success', 'Ticket berhasil diubah ke pending.');
+            ->with('success', __('toasts.ticket_pending'));
     }
 
     public function resume(ResumeTicketRequest $request, Ticket $ticket): RedirectResponse
@@ -44,11 +44,11 @@ class TicketStatusController extends Controller
             ]);
         });
 
-        $this->logActivity('resume', 'Melanjutkan ticket '.$ticket->ticket_number, $ticket);
+        $this->logActivity('resume', 'activity_logs.log_ticket_resume', $ticket, ['number' => $ticket->ticket_number]);
 
         return redirect()
             ->route('tickets.show', $ticket)
-            ->with('success', 'Ticket berhasil dilanjutkan.');
+            ->with('success', __('toasts.ticket_resumed'));
     }
 
     public function close(CloseTicketRequest $request, Ticket $ticket): RedirectResponse
@@ -61,10 +61,10 @@ class TicketStatusController extends Controller
             'closed_at' => $validated['finished_at'],
         ]);
 
-        $this->logActivity('close', 'Menutup ticket '.$ticket->ticket_number, $ticket);
+        $this->logActivity('close', 'activity_logs.log_ticket_close', $ticket, ['number' => $ticket->ticket_number]);
 
         return redirect()
             ->route('tickets.show', $ticket)
-            ->with('success', 'Ticket berhasil ditutup.');
+            ->with('success', __('toasts.ticket_closed'));
     }
 }

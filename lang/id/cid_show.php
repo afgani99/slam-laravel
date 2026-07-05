@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'title' => 'Detail CID :cid',
+    'subtitle' => 'Informasi master data dan ringkasan tiket CID.',
+    'sla_label' => 'SLA',
+    'cid_is' => 'CID IS',
+    'vendor' => 'Vendor',
+    'customer' => 'Pelanggan',
+    'service' => 'Service',
+    'status_open' => 'Open',
+    'status_pending' => 'Pending',
+    'status_closed' => 'Closed',
+    'total_tickets' => 'Total Tiket',
+    'chart_title' => 'Grafik SLA 6 Bulan',
+    'chart_subtitle' => 'Pencapaian SLA bulanan',
+    'recent_tickets_title' => 'Recent Ticket',
+    'recent_tickets_subtitle' => 'Riwayat tiket untuk CID ini',
+    'show_more' => 'Lihat lainnya →',
+    'col_ticket' => 'Ticket',
+    'col_case' => 'Kasus',
+    'col_status' => 'Status',
+    'col_started' => 'Mulai',
+    'no_tickets' => 'Belum ada ticket.',
+];

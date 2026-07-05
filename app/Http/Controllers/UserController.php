@@ -42,9 +42,9 @@ class UserController extends Controller
             'role' => $validated['role'],
         ]);
 
-        $this->logActivity('create', 'Menambahkan user '.$user->name, $user);
+        $this->logActivity('create', 'activity_logs.log_create_user', $user, ['name' => $user->name]);
 
-        return redirect()->route('settings.index')->with('success', 'User berhasil ditambahkan.');
+        return redirect()->route('settings.index')->with('success', __('toasts.user_created'));
     }
 
     public function edit(User $user): View|RedirectResponse
@@ -77,9 +77,9 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        $this->logActivity('update', 'Memperbarui user '.$user->name, $user);
+        $this->logActivity('update', 'activity_logs.log_update_user', $user, ['name' => $user->name]);
 
-        return redirect()->route('settings.index')->with('success', 'User berhasil diperbarui.');
+        return redirect()->route('settings.index')->with('success', __('toasts.user_updated'));
     }
 
     public function destroy(User $user): RedirectResponse
@@ -88,13 +88,13 @@ class UserController extends Controller
             return redirect()->route('profile.edit');
         }
         if ($user->id === auth()->id()) {
-            return back()->with('error', 'Anda tidak dapat menghapus akun sendiri.');
+            return back()->with('error', __('toasts.user_self_delete'));
         }
 
         $userName = $user->name;
-        $this->logActivity('delete', 'Menghapus user '.$userName, $user);
+        $this->logActivity('delete', 'activity_logs.log_delete_user', $user, ['name' => $userName]);
 
         $user->delete();
-        return redirect()->route('settings.index')->with('success', 'User berhasil dihapus.');
+        return redirect()->route('settings.index')->with('success', __('toasts.user_deleted'));
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\CidController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/gamas/{gamas}/resume', [GamasController::class, 'resume'])->name('gamas.resume');
     Route::delete('/gamas/logs/{log}', [GamasController::class, 'deleteLog'])->name('gamas.logs.destroy');
     Route::delete('/gamas/{gamas}/tickets/{ticket}', [GamasController::class, 'removeTicket'])->name('gamas.tickets.destroy');
+    Route::post('/locale', LocaleController::class)->name('locale.update');
     Route::post('/tickets/{ticket}/pending', [TicketStatusController::class, 'pending'])->name('tickets.pending');
     Route::post('/tickets/{ticket}/resume', [TicketStatusController::class, 'resume'])->name('tickets.resume');
     Route::post('/tickets/{ticket}/close', [TicketStatusController::class, 'close'])->name('tickets.close');

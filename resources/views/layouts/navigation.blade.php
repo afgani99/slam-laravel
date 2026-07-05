@@ -1,33 +1,32 @@
 @php
     $menuGroups = [
         'main' => [
-            ['route' => 'dashboard', 'params' => [], 'icon' => 'dashboard', 'label' => 'Dashboard'],
-            ['route' => 'cids.index', 'params' => [], 'icon' => 'lan', 'label' => 'Master CID', 'active_pattern' => 'cids.*'],
-            ['route' => 'gamas.index', 'params' => [], 'icon' => 'sensors', 'label' => 'Gamas Ticket', 'active_pattern' => 'gamas.*'],
-            ['route' => 'tickets.index', 'params' => ['status' => 'open'], 'icon' => 'notifications_active', 'label' => 'Opened Ticket'],
-            ['route' => 'tickets.index', 'params' => ['status' => 'pending'], 'icon' => 'hourglass_top', 'label' => 'Pending Ticket'],
-            ['route' => 'tickets.index', 'params' => ['status' => 'closed'], 'icon' => 'task_alt', 'label' => 'Closed Ticket'],
+            ['route' => 'dashboard', 'params' => [], 'icon' => 'dashboard', 'label' => __('navigation.dashboard')],
+            ['route' => 'cids.index', 'params' => [], 'icon' => 'lan', 'label' => __('navigation.master_cid'), 'active_pattern' => 'cids.*'],
+            ['route' => 'gamas.index', 'params' => [], 'icon' => 'sensors', 'label' => __('navigation.gamas'), 'active_pattern' => 'gamas.*'],
+            ['route' => 'tickets.index', 'params' => ['status' => 'open'], 'icon' => 'notifications_active', 'label' => __('navigation.tickets_open')],
+            ['route' => 'tickets.index', 'params' => ['status' => 'pending'], 'icon' => 'hourglass_top', 'label' => __('navigation.tickets_pending')],
+            ['route' => 'tickets.index', 'params' => ['status' => 'closed'], 'icon' => 'task_alt', 'label' => __('navigation.tickets_closed')],
         ],
         'reports' => [
-            ['route' => 'sla.monthly', 'params' => [], 'icon' => 'bar_chart', 'label' => 'SLA Bulanan'],
-            ['route' => 'sla.restitution', 'params' => [], 'icon' => 'savings', 'label' => 'Restitusi'],
+            ['route' => 'sla.monthly', 'params' => [], 'icon' => 'bar_chart', 'label' => __('navigation.sla_monthly')],
+            ['route' => 'sla.restitution', 'params' => [], 'icon' => 'savings', 'label' => __('navigation.sla_restitution')],
         ],
         'system' => [
-            ['route' => 'activity-logs.index', 'params' => [], 'icon' => 'history', 'label' => 'Log Aktivitas'],
+            ['route' => 'activity-logs.index', 'params' => [], 'icon' => 'history', 'label' => __('navigation.activity_logs')],
         ],
     ];
 
     if (auth()->check() && auth()->user()->role === 'admin') {
-        $menuGroups['system'][] = ['route' => 'settings.index', 'params' => [], 'icon' => 'settings', 'label' => 'Pengaturan'];
+        $menuGroups['system'][] = ['route' => 'settings.index', 'params' => [], 'icon' => 'settings', 'label' => __('navigation.settings')];
     } else {
-        $menuGroups['system'][] = ['route' => 'profile.edit', 'params' => [], 'icon' => 'settings', 'label' => 'Pengaturan'];
+        $menuGroups['system'][] = ['route' => 'profile.edit', 'params' => [], 'icon' => 'settings', 'label' => __('navigation.settings')];
     }
 
     if (! function_exists('slamNavActive')) {
         function slamNavActive($route, $params = [], $activePattern = null) {
             $pattern = $activePattern ?? ($route . '*');
             
-            // Special handling for ticket detail pages to keep sidebar active
             if (request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')) {
                 $ticket = request()->route('ticket');
                 if ($ticket && isset($params['status']) && $ticket->status === $params['status']) {
@@ -35,7 +34,6 @@
                 }
             }
 
-            // Special handling for profile page to keep Settings active
             if (request()->routeIs('profile.edit') && $route === 'settings.index') {
                 return true;
             }

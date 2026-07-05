@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'GAMAS',
+    'subtitle' => 'Gangguan Massal — kelola insiden massal.',
+    'filter_title' => 'Filter & Pencarian',
+    'filter_subtitle' => 'Cari berdasarkan nomor GAMAS, vendor, case type, CID, atau pelanggan',
+    'btn_create' => 'Buat GAMAS',
+    'search_placeholder' => 'Nomor GAMAS, vendor, case type…',
+    'per_page' => 'Tampilkan',
+    'rows' => ':count baris',
+    'status' => 'Status',
+    'all_status' => 'Semua Status',
+    'apply_filter' => 'Terapkan Filter',
+    'reset' => 'Reset',
+    'total_found' => ':total data ditemukan',
+    'table_gamas' => 'Gamas #',
+    'table_vendor' => 'Vendor',
+    'table_case' => 'Case Type',
+    'table_started' => 'Mulai',
+    'table_status' => 'Status',
+    'table_tickets' => 'Tiket',
+    'table_finished' => 'Selesai',
+    'table_action' => 'Aksi',
+    'confirm_delete' => 'Hapus GAMAS ini dan semua tiket terkait?',
+    'no_data' => 'Belum ada data GAMAS.',
+];

@@ -68,17 +68,17 @@ class CidController extends Controller
     {
         $cid = Cid::create($request->validated());
 
-        $this->logActivity('create', 'Menambahkan CID '.$cid->cid, $cid);
+        $this->logActivity('create', 'activity_logs.log_create_cid', $cid, ['number' => $cid->cid]);
 
         if ($request->has('_modal')) {
             return redirect()
                 ->route('cids.index')
-                ->with('success', 'CID berhasil ditambahkan.');
+                ->with('success', __('toasts.cid_created'));
         }
 
         return redirect()
             ->route('cids.show', $cid)
-            ->with('success', 'CID berhasil ditambahkan.');
+            ->with('success', __('toasts.cid_created'));
     }
 
     /**
@@ -132,23 +132,23 @@ class CidController extends Controller
     {
         $cid->update($request->validated());
 
-        $this->logActivity('update', 'Memperbarui CID '.$cid->cid, $cid);
+        $this->logActivity('update', 'activity_logs.log_update_cid', $cid, ['number' => $cid->cid]);
 
         if ($request->has('_modal')) {
             return redirect()
                 ->route('cids.index')
-                ->with('success', 'CID berhasil diperbarui.');
+                ->with('success', __('toasts.cid_updated'));
         }
 
         return redirect()
             ->route('cids.show', $cid)
-            ->with('success', 'CID berhasil diperbarui.');
+            ->with('success', __('toasts.cid_updated'));
     }
 
     public function destroy(Cid $cid): RedirectResponse
     {
         $cidNumber = $cid->cid;
-        $this->logActivity('delete', 'Menghapus CID '.$cidNumber.' dan semua tiket terkait', $cid);
+        $this->logActivity('delete', 'activity_logs.log_delete_cid', $cid, ['number' => $cidNumber]);
 
         DB::transaction(function () use ($cid): void {
             // Hapus semua interval pending dari tiket-tiket milik CID ini
@@ -165,6 +165,6 @@ class CidController extends Controller
 
         return redirect()
             ->route('cids.index')
-            ->with('success', 'CID dan semua tiket terkait berhasil dihapus.');
+            ->with('success', __('toasts.cid_deleted'));
     }
 }
