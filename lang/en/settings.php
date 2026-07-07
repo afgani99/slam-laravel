@@ -30,5 +30,11 @@ return [
     'theme_desc' => 'Display theme settings.',
     'backup_setting' => 'Backup & Import Database',
     'backup_desc' => 'Download backup and import database.',
+    'export' => 'Export',
+    'import' => 'Import',
+    'import_db' => 'Import Database',
+    'select_file' => 'Select File (.sql / .sqlite)',
+    'import_button' => 'Restore Database',
+    'confirm_restore' => 'Warning: This process will overwrite all current data and cannot be undone. Are you sure you want to proceed?',
     'coming_soon' => 'Coming Soon',
 ];

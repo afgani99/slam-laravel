@@ -64,11 +64,17 @@ class CidExport
     protected function fillSheet($sheet, string $vendorName, array $items)
     {
         $sheet->setCellValue('A1', 'DAFTAR MASTER CID - ' . strtoupper($vendorName));
-        $sheet->mergeCells('A1:F1');
+        $sheet->mergeCells('A1:G1');
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         
-        $headers = ['No', 'CID', 'CID IS', 'Pelanggan', 'Service', 'SLA Target'];
+        $period = date('F Y'); // e.g., July 2026
+        $sheet->setCellValue('A2', 'Periode Export: ' . $period);
+        $sheet->mergeCells('A2:G2');
+        $sheet->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A2')->getFont()->setItalic(true);
+        
+        $headers = ['No', 'CID', 'CID IS', 'Pelanggan', 'Service', 'SLA Target', 'Status'];
         $col = 'A';
         foreach ($headers as $h) {
             $sheet->setCellValue($col . '3', $h);
@@ -81,19 +87,27 @@ class CidExport
         $row = 4;
         $no = 1;
         foreach ($items as $cid) {
+            $isDismantled = (bool) $cid->is_dismantled;
+            
             $sheet->setCellValue('A' . $row, $no++);
             $sheet->setCellValue('B' . $row, $cid->cid);
             $sheet->setCellValue('C' . $row, $cid->cid_is);
             $sheet->setCellValue('D' . $row, $cid->customer_name);
             $sheet->setCellValue('E' . $row, $cid->service);
             $sheet->setCellValue('F' . $row, $cid->sla_percentage . '%');
+            $sheet->setCellValue('G' . $row, $isDismantled ? __('cids.status_dismantled') : __('cids.status_active'));
             
-            for ($c = 'A'; $c <= 'F'; $c++) {
-                $sheet->getStyle($c . $row)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+            for ($c = 'A'; $c <= 'G'; $c++) {
+                $style = $sheet->getStyle($c . $row);
+                $style->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+                
+                if ($isDismantled) {
+                    $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFCCCC'); // Light Red
+                }
             }
             $row++;
         }
         
-        foreach (range('A', 'F') as $col) $sheet->getColumnDimension($col)->setAutoSize(true);
+        foreach (range('A', 'G') as $col) $sheet->getColumnDimension($col)->setAutoSize(true);
     }
 }

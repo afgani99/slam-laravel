@@ -62,8 +62,8 @@
 
     <div class="px-5 py-5">
         <div class="flex items-center gap-3 px-4 py-4">
-            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#e66a4a]/12 ring-1 ring-[#e66a4a]/20">
-                <span class="material-symbols-outlined text-[22px] text-[#f07a5f]">hub</span>
+            <div class="flex h-11 w-11 items-center justify-center rounded-[10px] bg-gradient-to-br from-[#f27e5d] to-[#a83c22]">
+                <span class="material-symbols-outlined text-[26px] text-white">hub</span>
             </div>
             <div>
                 <h1 class="text-[15px] font-semibold leading-5 text-white">SLA Monitor</h1>

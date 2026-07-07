@@ -20,12 +20,14 @@
         <div class="flex min-h-screen flex-col items-center justify-center bg-neutral-950 px-4">
             <div class="w-full max-w-sm">
                 <!-- Logo -->
-                <div class="mb-8 text-center">
-                    <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500">
-                        <span class="material-symbols-outlined text-2xl text-white">stacked_line_chart</span>
+                <div class="mb-10 flex flex-col items-center justify-center text-center">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#f27e5d] to-[#a83c22] shadow-md">
+                            <span class="material-symbols-outlined text-[24px] text-white">hub</span>
+                        </div>
+                        <h1 class="text-3xl font-black tracking-tight text-white leading-none">SLAM</h1>
                     </div>
-                    <h1 class="mt-4 text-xl font-semibold text-white">SLAM</h1>
-                    <p class="text-sm text-neutral-500">SLA Monitoring System</p>
+                    <p class="text-sm font-medium text-neutral-400 tracking-wide opacity-90">SLA Monitoring System</p>
                 </div>
 
                 <!-- Card -->

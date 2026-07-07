@@ -43,6 +43,7 @@ class GamasController extends Controller
             })
             ->latest()
             ->paginate($perPage)
+            ->onEachSide(1)
             ->withQueryString();
 
         $cids = Cid::orderBy('cid')->get();

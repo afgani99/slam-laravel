@@ -30,7 +30,7 @@
             </div>
 
 
-            <form method="GET" action="{{ route('cids.index') }}" class="mt-5 grid gap-3 lg:grid-cols-[1fr_110px] lg:items-end">
+            <form method="GET" action="{{ route('cids.index') }}" class="mt-5 grid gap-3 lg:grid-cols-[1fr_120px_110px] lg:items-end">
                 {{-- Search Input --}}
                 <div class="flex flex-col gap-1.5">
                     <x-input-label for="search" :value="__('cids.search_label')" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
@@ -38,6 +38,16 @@
                         <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-neutral-500">search</span>
                         <x-text-input id="search" name="search" type="search" class="block w-full pl-10" :placeholder="__('cids.search_placeholder')" :value="$search" />
                     </div>
+                </div>
+
+                {{-- Status Filter --}}
+                <div class="flex flex-col gap-1.5">
+                    <x-input-label for="status" :value="__('cids.status_label')" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
+                    <select id="status" name="status" class="block w-full rounded-xl border border-white/10 bg-[#262626] px-4 py-2.5 text-sm text-white transition focus:border-[#e66a4a] focus:outline-none focus:ring-2 focus:ring-[#e66a4a]/20">
+                        <option value="all" @selected($status === 'all')>{{ __('cids.status_all') }}</option>
+                        <option value="active" @selected($status === 'active')>{{ __('cids.status_active') }}</option>
+                        <option value="dismantled" @selected($status === 'dismantled')>{{ __('cids.status_dismantled') }}</option>
+                    </select>
                 </div>
 
                 {{-- Per Page --}}
@@ -52,7 +62,7 @@
                 </div>
 
                 {{-- Action Buttons --}}
-                <div class="flex items-center gap-2 border-t border-white/5 pt-4 lg:col-span-2">
+                <div class="flex items-center gap-2 border-t border-white/5 pt-4 lg:col-span-3">
                     <button type="submit"
                         class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
                         <span class="material-symbols-outlined text-[16px]">tune</span>
@@ -96,9 +106,16 @@
                         @forelse ($cids as $cid)
                             <tr class="transition duration-150 hover:bg-white/[0.03]">
                                 <td class="px-6 py-4">
-                                    <a href="{{ route('cids.show', $cid) }}" class="font-medium text-[#e66a4a] transition hover:text-[#ff7b5c]">
-                                        {{ $cid->cid }}
-                                    </a>
+                                    <div class="flex items-center gap-2">
+                                        <a href="{{ route('cids.show', $cid) }}" class="font-medium text-[#e66a4a] transition hover:text-[#ff7b5c]">
+                                            {{ $cid->cid }}
+                                        </a>
+                                        @if($cid->is_dismantled)
+                                            <span class="inline-flex rounded-full bg-red-900/20 px-2 py-0.5 text-[10px] font-medium tracking-wide text-red-400 border border-red-900/30">
+                                                {{ __('cids.badge_dismantled') }}
+                                            </span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 text-neutral-200">{{ $cid->vendor_name }}</td>
                                 <td class="px-6 py-4 text-neutral-200">
@@ -125,10 +142,12 @@
                                 <td class="px-6 py-4 text-center">
                                     <div class="flex justify-center items-center gap-2">
                                         @if(in_array(auth()->user()->role, ['admin', 'operator']))
-                                            <button @click="ticketCidId = {{ $cid->id }}; ticketCidCid = @js($cid->cid); ticketCidIs = @js($cid->cid_is); ticketCidVendor = @js($cid->vendor_name); ticketCidCustomer = @js($cid->customer_name); ticketCidService = @js($cid->service); showTicketModal = true" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" :title="__('cids.action_add_ticket')" :aria-label="__('cids.action_add_ticket')">
-                                                <span class="material-symbols-outlined text-[14px]">add_circle</span>
-                                            </button>
-                                            <button type="button" @click="editCid = { id: {{ $cid->id }}, cid: @js($cid->cid), cid_is: @js($cid->cid_is), vendor_name: @js($cid->vendor_name), customer_name: @js($cid->customer_name), service: @js($cid->service), sla_percentage: @js($cid->sla_percentage) }; showEditCidModal = true" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" :title="__('cids.action_edit')" :aria-label="__('cids.action_edit')">
+                                            @if(!$cid->is_dismantled)
+                                                <button @click="ticketCidId = {{ $cid->id }}; ticketCidCid = @js($cid->cid); ticketCidIs = @js($cid->cid_is); ticketCidVendor = @js($cid->vendor_name); ticketCidCustomer = @js($cid->customer_name); ticketCidService = @js($cid->service); showTicketModal = true" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" :title="__('cids.action_add_ticket')" :aria-label="__('cids.action_add_ticket')">
+                                                    <span class="material-symbols-outlined text-[14px]">add_circle</span>
+                                                </button>
+                                            @endif
+                                            <button type="button" @click="editCid = { id: {{ $cid->id }}, cid: @js($cid->cid), cid_is: @js($cid->cid_is), vendor_name: @js($cid->vendor_name), customer_name: @js($cid->customer_name), service: @js($cid->service), sla_percentage: @js($cid->sla_percentage), is_dismantled: {{ $cid->is_dismantled ? 'true' : 'false' }} }; showEditCidModal = true" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/5 bg-[#262626] text-neutral-300 transition hover:border-white/10 hover:bg-[#2f2f2f] hover:text-white" :title="__('cids.action_edit')" :aria-label="__('cids.action_edit')">
                                                 <span class="material-symbols-outlined text-[14px]">edit</span>
                                             </button>
                                         @endif
@@ -227,6 +246,12 @@
                             <x-text-input id="sla_percentage" name="sla_percentage" type="number" min="0" max="100" step="0.01" class="mt-1 block w-full" :value="old('sla_percentage', 99.00)" required />
                             <x-input-error class="mt-2" :messages="$errors->get('sla_percentage')" />
                         </div>
+                        @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                        <div class="md:col-span-2 flex items-center gap-2 mt-2">
+                            <input type="checkbox" id="is_dismantled" name="is_dismantled" value="1" class="rounded border-white/10 bg-[#262626] text-[#e66a4a] focus:ring-[#e66a4a]/20" @checked(old('is_dismantled'))>
+                            <x-input-label for="is_dismantled" :value="__('cids.label_is_dismantled')" class="!mb-0 cursor-pointer" />
+                        </div>
+                        @endif
                     </div>
 
                     <div class="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">
@@ -303,6 +328,13 @@
                             <x-text-input id="edit_sla_percentage" name="sla_percentage" type="number" min="0" max="100" step="0.01" class="mt-1 block w-full" x-model="editCid.sla_percentage" required />
                             <x-input-error class="mt-2" :messages="$errors->get('sla_percentage')" />
                         </div>
+                        @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                        <div class="md:col-span-2 flex items-center gap-2 mt-2">
+                            <input type="hidden" name="is_dismantled" value="0">
+                            <input type="checkbox" id="edit_is_dismantled" name="is_dismantled" value="1" class="rounded border-white/10 bg-[#262626] text-[#e66a4a] focus:ring-[#e66a4a]/20" x-model="editCid.is_dismantled">
+                            <x-input-label for="edit_is_dismantled" :value="__('cids.label_is_dismantled')" class="!mb-0 cursor-pointer" />
+                        </div>
+                        @endif
                     </div>
 
                     <div class="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">

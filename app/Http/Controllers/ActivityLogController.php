@@ -31,6 +31,7 @@ class ActivityLogController extends Controller
             ->when($action, fn ($query) => $query->where('action', $action))
             ->latest('created_at')
             ->paginate($perPage)
+            ->onEachSide(1)
             ->withQueryString();
 
         $actions = ActivityLog::query()

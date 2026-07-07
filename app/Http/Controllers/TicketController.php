@@ -56,9 +56,10 @@ class TicketController extends Controller
             })
             ->latest('started_at')
             ->paginate($perPage)
+            ->onEachSide(1)
             ->withQueryString();
 
-        $cids      = Cid::orderBy('cid')->get();
+        $cids      = Cid::where('is_dismantled', false)->orderBy('cid')->get();
         $caseTypes = Ticket::CASE_TYPES;
 
         return view('tickets.index', compact('tickets', 'status', 'search', 'perPage', 'filter', 'caseType', 'cids', 'caseTypes'));
@@ -66,7 +67,7 @@ class TicketController extends Controller
 
     public function create(Request $request): View
     {
-        $cids = Cid::orderBy('cid')->get();
+        $cids = Cid::where('is_dismantled', false)->orderBy('cid')->get();
         $selectedCid = $request->integer('cid_id') ?: null;
 
         return view('tickets.create', [
@@ -130,7 +131,7 @@ class TicketController extends Controller
                 ->with('error', __('toasts.ticket_closed_edit'));
         }
 
-        $cids = Cid::orderBy('cid')->get();
+        $cids = Cid::where('is_dismantled', false)->orderBy('cid')->get();
 
         return view('tickets.edit', [
             'ticket' => $ticket,

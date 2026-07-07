@@ -34,6 +34,7 @@ class UpdateCidRequest extends FormRequest
             'customer_name' => ['required', 'string', 'max:255'],
             'service' => ['required', 'string', 'max:255'],
             'sla_percentage' => ['required', 'numeric', 'min:0', 'max:100'],
+            'is_dismantled' => ['boolean'],
         ];
     }
 

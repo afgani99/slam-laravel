@@ -28,10 +28,13 @@ class CidController extends Controller
         }
 
         $search = trim((string) $request->query('search'));
+        $status = $request->query('status', 'active'); // 'all', 'active', 'dismantled'
         $perPage = (int) $request->query('per_page', 10);
         $perPage = in_array($perPage, [10, 25, 50], true) ? $perPage : 10;
 
         $cids = Cid::query()
+            ->when($status === 'active', fn ($q) => $q->where('is_dismantled', false))
+            ->when($status === 'dismantled', fn ($q) => $q->where('is_dismantled', true))
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($query) use ($search): void {
                     $query->where('cid', 'like', "%{$search}%")
@@ -43,12 +46,13 @@ class CidController extends Controller
             ->withCount('tickets')
             ->latest()
             ->paginate($perPage)
+            ->onEachSide(1)
             ->withQueryString();
 
-        $allCids = Cid::orderBy('cid')->get();
+        $allCids = Cid::where('is_dismantled', false)->orderBy('cid')->get();
         $caseTypes = Ticket::CASE_TYPES;
 
-        return view('cids.index', compact('cids', 'search', 'perPage', 'allCids', 'caseTypes'));
+        return view('cids.index', compact('cids', 'search', 'status', 'perPage', 'allCids', 'caseTypes'));
     }
 
     /**
@@ -66,7 +70,16 @@ class CidController extends Controller
      */
     public function store(StoreCidRequest $request): RedirectResponse
     {
-        $cid = Cid::create($request->validated());
+        $data = $request->validated();
+        
+        if (!empty($data['is_dismantled']) && in_array(auth()->user()->role, ['admin', 'operator'])) {
+            $data['dismantled_at'] = now();
+            $data['dismantled_by'] = auth()->id();
+        } else {
+            $data['is_dismantled'] = false;
+        }
+
+        $cid = Cid::create($data);
 
         $this->logActivity('create', 'activity_logs.log_create_cid', $cid, ['number' => $cid->cid]);
 
@@ -130,7 +143,22 @@ class CidController extends Controller
      */
     public function update(UpdateCidRequest $request, Cid $cid): RedirectResponse
     {
-        $cid->update($request->validated());
+        $data = $request->validated();
+
+        if (in_array(auth()->user()->role, ['admin', 'operator'])) {
+            if (!empty($data['is_dismantled']) && !$cid->is_dismantled) {
+                $data['dismantled_at'] = now();
+                $data['dismantled_by'] = auth()->id();
+            } elseif (empty($data['is_dismantled'])) {
+                $data['is_dismantled'] = false;
+                $data['dismantled_at'] = null;
+                $data['dismantled_by'] = null;
+            }
+        } else {
+            unset($data['is_dismantled']);
+        }
+
+        $cid->update($data);
 
         $this->logActivity('update', 'activity_logs.log_update_cid', $cid, ['number' => $cid->cid]);
 

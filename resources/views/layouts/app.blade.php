@@ -26,10 +26,6 @@
                                 {{ $header }}
                             </div>
                             <div class="flex items-center gap-2">
-                                <button class="slam-header-btn">
-                                    <span class="material-symbols-outlined text-[22px]">light_mode</span>
-                                </button>
-                                
                                 <form method="POST" action="{{ route('locale.update') }}" class="m-0">
                                     @csrf
                                     @if(app()->getLocale() === 'en')
@@ -68,12 +64,6 @@
                                             <div class="flex items-center gap-2">
                                                 <span class="material-symbols-outlined text-sm">settings</span>
                                                 {{ __('header.profile_settings') }}
-                                            </div>
-                                        </x-dropdown-link>
-                                        <x-dropdown-link href="#">
-                                            <div class="flex items-center gap-2">
-                                                <span class="material-symbols-outlined text-sm">dark_mode</span>
-                                                {{ __('header.toggle_theme') }}
                                             </div>
                                         </x-dropdown-link>
                                         <form method="POST" action="{{ route('logout') }}">

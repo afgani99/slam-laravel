@@ -1,4 +1,8 @@
 @if ($paginator->hasPages())
+    @php
+        // Paksa hanya 1 halaman di kiri dan kanan halaman aktif agar tidak terlalu panjang
+        $paginator->onEachSide(1);
+    @endphp
     <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between gap-4">
         <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>

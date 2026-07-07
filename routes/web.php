@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/sla/restitution/export', [SlaRestitutionController::class, 'export'])->name('sla.restitution.export');
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::get('/settings/backup/export', [App\Http\Controllers\BackupController::class, 'export'])->name('settings.backup.export');
+    Route::post('/settings/backup/import', [App\Http\Controllers\BackupController::class, 'import'])->name('settings.backup.import');
     Route::resource('users', UserController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
 });
 

@@ -17,7 +17,12 @@ class StoreTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cid_id' => ['required', 'exists:cids,id'],
+            'cid_id' => [
+                'required',
+                Rule::exists('cids', 'id')->where(function ($query) {
+                    $query->where('is_dismantled', false);
+                }),
+            ],
             'vendor_ticket_number' => ['nullable', 'string', 'max:255'],
             'case_type' => ['required', Rule::in(Ticket::CASE_TYPES)],
             'started_at' => ['required', 'date'],

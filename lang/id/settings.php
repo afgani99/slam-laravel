@@ -30,5 +30,11 @@ return [
     'theme_desc' => 'Pengaturan tema tampilan.',
     'backup_setting' => 'Backup & Import Database',
     'backup_desc' => 'Download backup dan import database.',
+    'export' => 'Ekspor',
+    'import' => 'Impor',
+    'import_db' => 'Impor Database',
+    'select_file' => 'Pilih File (.sql / .sqlite)',
+    'import_button' => 'Restore Database',
+    'confirm_restore' => 'Peringatan: Proses ini akan menimpa seluruh data saat ini dan tidak dapat dibatalkan. Apakah Anda yakin ingin melanjutkan?',
     'coming_soon' => 'Coming Soon',
 ];

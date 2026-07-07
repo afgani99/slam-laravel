@@ -17,13 +17,23 @@ class Cid extends Model
         'customer_name',
         'service',
         'sla_percentage',
+        'is_dismantled',
+        'dismantled_at',
+        'dismantled_by',
     ];
 
     protected function casts(): array
     {
         return [
             'sla_percentage' => 'decimal:2',
+            'is_dismantled' => 'boolean',
+            'dismantled_at' => 'datetime',
         ];
+    }
+
+    public function dismantledBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dismantled_by');
     }
 
     public function tickets(): HasMany
