@@ -207,7 +207,7 @@
 
             {{-- Modal Panel --}}
             <div x-show="showTicketModal"
-                class="relative z-10 w-full max-w-3xl"
+                class="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto"
                 x-transition:enter="transition duration-200 ease-out"
                 x-transition:enter-start="translate-y-6 opacity-0 scale-[0.97]"
                 x-transition:enter-end="translate-y-0 opacity-100 scale-100"
@@ -217,7 +217,7 @@
 
                 <div class="rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl shadow-black/50">
                     {{-- macOS-style header --}}
-                    <div class="flex items-center gap-3 px-5 pb-2 pt-4">
+                    <div class="sticky top-0 z-10 flex items-center gap-3 px-5 pb-2 pt-4 bg-[#1f1f1f]">
                         <div class="flex items-center gap-1.5">
                             <button type="button" @click="showTicketModal = false"
                                 class="h-3 w-3 rounded-full bg-[#ff5f57] ring-1 ring-black/20 transition hover:opacity-90"
@@ -229,12 +229,12 @@
                     </div>
 
                     {{-- Form --}}
-                    <form method="POST" action="{{ route('tickets.store') }}" class="p-6">
+                    <form method="POST" action="{{ route('tickets.store') }}" class="p-4 sm:p-6">
                         @csrf
 
-                        <div class="grid gap-5 md:grid-cols-2">
+                        <div class="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2">
                             {{-- CID searchable --}}
-                            <div x-data="{ search: '', open: false }" class="md:col-span-2">
+                            <div x-data="{ search: '', open: false }" class="sm:col-span-2">
                                 <x-input-label for="ticket_index_cid_search" :value="__('tickets.select_cid')" />
                                 <div class="relative mt-1">
                                     <x-text-input
@@ -319,7 +319,7 @@
                             </div>
 
                             {{-- Waktu Mulai --}}
-                            <div class="md:col-span-2">
+                            <div class="sm:col-span-2">
                                 <x-input-label for="ticket_index_started_at" :value="__('tickets.started_at')" />
                                 <x-text-input id="ticket_index_started_at" name="started_at"
                                     type="datetime-local" class="mt-1 block w-full" :value="old('started_at')" required />
@@ -327,15 +327,15 @@
                             </div>
                         </div>
 
-                        <div class="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">
+                        <div class="mt-6 flex flex-col-reverse sm:flex-row items-center gap-3 border-t border-white/5 pt-5">
+                            <button type="button" @click="showTicketModal = false"
+                                class="w-full sm:w-auto inline-flex h-[42px] items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">
+                                {{ __('tickets.cancel') }}
+                            </button>
                             <button type="submit"
-                                class="inline-flex h-[42px] items-center gap-2 rounded-xl bg-[#e66a4a] px-6 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
+                                class="w-full sm:w-auto inline-flex h-[42px] items-center justify-center gap-2 rounded-xl bg-[#e66a4a] px-6 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
                                 <span class="material-symbols-outlined text-[18px]">save</span>
                                 {{ __('tickets.save_ticket') }}
-                            </button>
-                            <button type="button" @click="showTicketModal = false"
-                                class="inline-flex h-[42px] items-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">
-                                {{ __('tickets.cancel') }}
                             </button>
                         </div>
                     </form>

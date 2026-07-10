@@ -5,7 +5,7 @@
         </div>
         <div>
             <h2 class="text-[22px] font-semibold tracking-tight text-white">{{ __('settings.title') }}</h2>
-            <p class="mt-1 text-sm text-neutral-500">{{ __('settings.subtitle') }}</p>
+            <p class="mt-1 hidden text-sm text-neutral-500 sm:block">{{ __('settings.subtitle') }}</p>
         </div>
     </x-slot>
 

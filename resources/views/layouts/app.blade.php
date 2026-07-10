@@ -15,16 +15,19 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-[#0d0d0d] text-neutral-100">
-        <div class="min-h-screen w-full bg-[#0d0d0d]">
+        <div x-data="{ sidebarOpen: false }" class="min-h-screen w-full bg-[#0d0d0d]">
             @include('layouts.navigation')
 
-            <div class="flex min-h-screen min-w-0 flex-1 flex-col pl-[280px]">
+            <div class="flex min-h-screen min-w-0 flex-1 flex-col md:pl-[280px]">
                 @isset($header)
                     <header class="sticky top-0 z-30 border-b border-white/5 backdrop-blur">
-                        <div class="flex items-center justify-between gap-4 px-6 py-2">
+                        <div class="flex items-center justify-between gap-4 px-6 py-3 sm:py-2">
                             <div class="flex items-center gap-3">
-                                {{ $header }}
-                            </div>
+                            <button type="button" @click="sidebarOpen = true" class="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[#262626] text-neutral-400 transition hover:bg-[#2f2f2f] hover:text-white">
+                                <span class="material-symbols-outlined text-[20px]">menu</span>
+                            </button>
+                            {{ $header }}
+                        </div>
                             <div class="flex items-center gap-2">
                                 <form method="POST" action="{{ route('locale.update') }}" class="m-0">
                                     @csrf

@@ -5,7 +5,7 @@
         </div>
         <div>
             <h2 class="text-[22px] font-semibold tracking-tight text-white">{{ __('sla_restitution.title') }}</h2>
-            <p class="mt-1 text-sm text-neutral-500">{{ __('sla_restitution.subtitle') }}</p>
+            <p class="mt-1 hidden text-sm text-neutral-500 sm:block">{{ __('sla_restitution.subtitle') }}</p>
         </div>
     </x-slot>
 
@@ -31,8 +31,8 @@
                 </span>
             </div>
 
-            <form method="GET" action="{{ route('sla.restitution') }}" class="mt-5 grid gap-3 lg:grid-cols-[1fr_160px_130px] lg:items-end">
-                <div class="flex flex-col gap-1.5">
+            <form method="GET" action="{{ route('sla.restitution') }}" class="mt-5 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_160px_130px] lg:items-end">
+                <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
                     <x-input-label for="search" :value="__('sla_restitution.search')" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
                     <div class="relative">
                         <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-neutral-500">search</span>
@@ -58,24 +58,28 @@
                     </select>
                 </div>
 
-                <div class="flex items-center gap-2 border-t border-white/5 pt-4 lg:col-span-3">
-                    <button type="submit" class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
-                        <span class="material-symbols-outlined text-[16px]">tune</span>
-                        {{ __('sla_restitution.apply_filter') }}
-                    </button>
-                    @if (request()->has('search') || request()->has('bulan') || request()->has('tahun'))
-                        <a href="{{ route('sla.restitution') }}" class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/10 bg-transparent px-4 text-sm text-neutral-400 transition hover:border-white/20 hover:text-white active:scale-[0.97]">
-                            <span class="material-symbols-outlined text-[16px]">restart_alt</span>
-                            {{ __('sla_restitution.reset') }}
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-2 border-t border-white/5 pt-4 sm:col-span-2 lg:col-span-3">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button type="submit" class="flex-1 sm:flex-none inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
+                            <span class="material-symbols-outlined text-[16px]">tune</span>
+                            {{ __('sla_restitution.apply_filter') }}
+                        </button>
+                        @if (request()->has('search') || request()->has('bulan') || request()->has('tahun'))
+                            <a href="{{ route('sla.restitution') }}" class="flex-1 sm:flex-none inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-transparent px-4 text-sm text-neutral-400 transition hover:border-white/20 hover:text-white active:scale-[0.97]">
+                                <span class="material-symbols-outlined text-[16px]">restart_alt</span>
+                                {{ __('sla_restitution.reset') }}
+                            </a>
+                        @endif
+                    </div>
+                    <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto sm:ml-auto">
+                        <span class="text-xs text-neutral-500">
+                            {{ __('sla_restitution.total_found', ['total' => $totalRestitusi]) }}
+                        </span>
+                        <a href="{{ route('sla.restitution.export', request()->query()) }}" class="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-700 active:scale-[0.97]">
+                            <span class="material-symbols-outlined text-[16px]">download</span>
+                            {{ __('sla_restitution.export') }}
                         </a>
-                    @endif
-                    <span class="ml-auto text-xs text-neutral-500">
-                        {{ __('sla_restitution.total_found', ['total' => $totalRestitusi]) }}
-                    </span>
-                    <a href="{{ route('sla.restitution.export', request()->query()) }}" class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-emerald-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-700 active:scale-[0.97]">
-                        <span class="material-symbols-outlined text-[16px]">download</span>
-                        {{ __('sla_restitution.export') }}
-                    </a>
+                    </div>
                 </div>
             </form>
         </div>

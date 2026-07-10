@@ -5,29 +5,31 @@
         </div>
         <div>
             <h2 class="text-[22px] font-semibold tracking-tight text-white">{{ __('dashboard.title') }}</h2>
-            <p class="mt-1 text-sm text-neutral-500">{{ __('dashboard.subtitle') }}</p>
+            <p class="mt-1 hidden text-sm text-neutral-500 sm:block">{{ __('dashboard.subtitle') }}</p>
         </div>
     </x-slot>
 
     <div x-data="{ showCidModal: false, showTicketModal: false, showCreateGamasModal: false, ticketCidId: null, ticketCidCid: '', ticketCidIs: '', ticketCidVendor: '', ticketCidCustomer: '', ticketCidService: '', cidsList: @js($cids) }" class="space-y-8">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h3 class="text-sm font-medium text-neutral-400">{{ __('dashboard.summary_stats') }}</h3>
-            <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <h3 class="text-sm font-medium text-neutral-400 lg:pt-0.5">{{ __('dashboard.summary_stats') }}</h3>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center lg:justify-end">
                 @if(in_array(auth()->user()->role, ['admin', 'operator']))
-                    <button type="button" @click="showCidModal = true" class="inline-flex items-center gap-1.5 rounded-md bg-[#e66a4a] px-3 py-1.5 text-xs text-white shadow-sm transition hover:bg-[#ff7b5c]">
-                        <span class="material-symbols-outlined text-[15px]">add</span>
-                        {{ __('dashboard.add_cid') }}
-                    </button>
-                    <button type="button" @click="showCreateGamasModal = true" class="inline-flex items-center gap-1.5 rounded-md bg-white hover:bg-gray-100 px-3 py-1.5 text-xs text-gray-900 shadow-sm transition">
-                        <span class="material-symbols-outlined text-[15px]">add</span>
-                        {{ __('dashboard.add_gamas') }}
-                    </button>
-                    <button type="button" @click="showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-md border border-white/5 bg-white/5 px-3 py-1.5 text-xs text-white transition hover:bg-white/10">
-                        <span class="material-symbols-outlined text-[15px]">add</span>
-                        {{ __('dashboard.add_ticket') }}
-                    </button>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" @click="showCidModal = true" class="inline-flex items-center gap-1.5 rounded-md bg-[#e66a4a] px-3 py-1.5 text-xs text-white shadow-sm transition hover:bg-[#ff7b5c]">
+                            <span class="material-symbols-outlined text-[15px]">add</span>
+                            {{ __('dashboard.add_cid') }}
+                        </button>
+                        <button type="button" @click="showCreateGamasModal = true" class="inline-flex items-center gap-1.5 rounded-md bg-white hover:bg-gray-100 px-3 py-1.5 text-xs text-gray-900 shadow-sm transition">
+                            <span class="material-symbols-outlined text-[15px]">add</span>
+                            {{ __('dashboard.add_gamas') }}
+                        </button>
+                        <button type="button" @click="showTicketModal = true" class="inline-flex items-center gap-1.5 rounded-md border border-white/5 bg-white/5 px-3 py-1.5 text-xs text-white transition hover:bg-white/10">
+                            <span class="material-symbols-outlined text-[15px]">add</span>
+                            {{ __('dashboard.add_ticket') }}
+                        </button>
+                    </div>
                 @endif
-                <div class="flex rounded-lg border border-white/5 bg-[#1a1a1a] p-1">
+                <div class="flex rounded-lg border border-white/5 bg-[#1a1a1a] p-1 w-fit">
                     @php $filter = request('filter', 'month'); @endphp
                     <a href="{{ route('dashboard', ['filter' => 'day']) }}" 
                        class="px-3 py-1 text-xs rounded-md transition {{ $filter == 'day' ? 'bg-orange-500 text-white shadow-sm' : 'text-neutral-400 hover:text-white' }}">
@@ -45,15 +47,15 @@
             </div>
         </div>
 
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <a href="{{ route('tickets.index', ['filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.total_tickets_created') }}</p><div class="mt-4 text-[34px] font-semibold leading-none text-white">{{ $stats['opened_count'] + $stats['pending_count'] + $stats['closed_count'] }}</div></a>
-            <a href="{{ route('tickets.index', ['status' => 'open', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.tickets_open') }}</p><div class="mt-4 text-[34px] font-semibold leading-none text-emerald-400">{{ $stats['opened_count'] }}</div></a>
-            <a href="{{ route('tickets.index', ['status' => 'pending', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.tickets_pending') }}</p><div class="mt-4 text-[34px] font-semibold leading-none text-yellow-400">{{ $stats['pending_count'] }}</div></a>
-            <a href="{{ route('tickets.index', ['status' => 'closed', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.tickets_closed') }}</p><div class="mt-4 text-[34px] font-semibold leading-none text-blue-400">{{ $stats['closed_count'] }}</div></a>
-            <a href="{{ route('sla.restitution') }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.restitution_cids') }}</p><div class="mt-4 text-[34px] font-semibold leading-none text-red-400">{{ $stats['restitution_count'] }}</div></a>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            <a href="{{ route('tickets.index', ['filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.total_tickets_created') }}</p><div class="mt-4 text-[24px] sm:text-[34px] font-semibold leading-none text-white">{{ $stats['opened_count'] + $stats['pending_count'] + $stats['closed_count'] }}</div></a>
+            <a href="{{ route('tickets.index', ['status' => 'open', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.tickets_open') }}</p><div class="mt-4 text-[24px] sm:text-[34px] font-semibold leading-none text-emerald-400">{{ $stats['opened_count'] }}</div></a>
+            <a href="{{ route('tickets.index', ['status' => 'pending', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.tickets_pending') }}</p><div class="mt-4 text-[24px] sm:text-[34px] font-semibold leading-none text-yellow-400">{{ $stats['pending_count'] }}</div></a>
+            <a href="{{ route('tickets.index', ['status' => 'closed', 'filter' => request('filter', 'month')]) }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.tickets_closed') }}</p><div class="mt-4 text-[24px] sm:text-[34px] font-semibold leading-none text-blue-400">{{ $stats['closed_count'] }}</div></a>
+            <a href="{{ route('sla.restitution') }}" class="slam-card p-6 transition hover:bg-transparent"><p class="slam-label">{{ __('dashboard.restitution_cids') }}</p><div class="mt-4 text-[24px] sm:text-[34px] font-semibold leading-none text-red-400">{{ $stats['restitution_count'] }}</div></a>
         </div>
 
-        <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+        <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] xl:grid-cols-[minmax(0,1fr)_420px]">
             <div class="space-y-6">
                 <div class="slam-panel p-6 hover:!bg-[#262626]">
                     <div class="flex items-center justify-between gap-4">
@@ -218,9 +220,9 @@
             x-transition:leave-end="opacity-0"
             x-on:keydown.escape.window="showCreateGamasModal = false">
             <div x-show="showCreateGamasModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm" x-on:click="showCreateGamasModal = false" aria-hidden="true"></div>
-            <div x-show="showCreateGamasModal" class="relative z-10 w-full max-w-3xl" x-transition:enter="transition duration-200 ease-out" x-transition:enter-start="translate-y-6 opacity-0 scale-[0.97]" x-transition:enter-end="translate-y-0 opacity-100 scale-100" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="translate-y-0 opacity-100 scale-100" x-transition:leave-end="translate-y-6 opacity-0 scale-[0.97]">
+            <div x-show="showCreateGamasModal" class="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto" x-transition:enter="transition duration-200 ease-out" x-transition:enter-start="translate-y-6 opacity-0 scale-[0.97]" x-transition:enter-end="translate-y-0 opacity-100 scale-100" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="translate-y-0 opacity-100 scale-100" x-transition:leave-end="translate-y-6 opacity-0 scale-[0.97]">
                 <div class="rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl shadow-black/50">
-                    <div class="flex items-center gap-3 px-5 pb-2 pt-4">
+                    <div class="sticky top-0 flex items-center gap-3 px-5 pb-2 pt-4 bg-[#1f1f1f] z-10">
                         <div class="flex items-center gap-1.5">
                             <button type="button" @click="showCreateGamasModal = false" class="h-3 w-3 rounded-full bg-[#ff5f57] ring-1 ring-black/20 transition hover:opacity-90" aria-label="Close modal"></button>
                             <span class="h-3 w-3 rounded-full bg-[#febc2e] ring-1 ring-black/20 opacity-60"></span>
@@ -228,10 +230,10 @@
                         </div>
                         <h3 class="text-sm font-semibold text-white/80">{{ __('modals.add_gamas_title') }}</h3>
                     </div>
-                    <form method="POST" action="{{ route('gamas.store') }}" class="p-6">
+                    <form method="POST" action="{{ route('gamas.store') }}" class="p-4 sm:p-6">
                         @csrf
                         <input type="hidden" name="_modal" value="1">
-                        <div class="grid gap-5 md:grid-cols-2">
+                        <div class="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2">
                             <div>
                                 <x-input-label for="dash_gamas_vendor_ticket_number" :value="__('cids.label_vendor_ticket_id')" />
                                 <x-text-input id="dash_gamas_vendor_ticket_number" name="vendor_ticket_number" type="text" class="mt-1 block w-full" :value="old('vendor_ticket_number')" />
@@ -250,7 +252,7 @@
                                 </div>
                                 <x-input-error class="mt-2" :messages="$errors->get('case_type')" />
                             </div>
-                            <div class="md:col-span-2">
+                            <div class="sm:col-span-2">
                                 <x-input-label for="dash_gamas_started_at" :value="__('modals.started_at')" />
                                 <x-text-input id="dash_gamas_started_at" name="started_at" type="datetime-local" class="mt-1 block w-full" :value="old('started_at')" required />
                                 <x-input-error class="mt-2" :messages="$errors->get('started_at')" />
@@ -311,12 +313,12 @@
                             </div>
                             <x-input-error class="mt-2" :messages="$errors->get('cid_ids')" />
                         </div>
-                        <div class="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">
-                            <button type="submit" class="inline-flex h-[42px] items-center gap-2 rounded-xl bg-[#e66a4a] px-6 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
+                        <div class="mt-6 flex flex-col-reverse sm:flex-row items-center gap-3 border-t border-white/5 pt-5">
+                            <button type="button" @click="showCreateGamasModal = false" class="w-full sm:w-auto inline-flex h-[42px] items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">{{ __('modals.btn_cancel') }}</button>
+                            <button type="submit" class="w-full sm:w-auto inline-flex h-[42px] items-center justify-center gap-2 rounded-xl bg-[#e66a4a] px-6 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
                                 <span class="material-symbols-outlined text-[18px]">bolt</span>
                                 {{ __('modals.save_gamas') }}
                             </button>
-                            <button type="button" @click="showCreateGamasModal = false" class="inline-flex h-[42px] items-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">{{ __('modals.btn_cancel') }}</button>
                         </div>
                     </form>
                 </div>

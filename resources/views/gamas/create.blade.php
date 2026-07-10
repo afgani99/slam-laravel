@@ -5,7 +5,7 @@
         </div>
         <div>
             <h2 class="text-[22px] font-semibold tracking-tight text-white">Buat GAMAS</h2>
-            <p class="mt-1 text-sm text-neutral-500">Buat gangguan massal untuk beberapa CID sekaligus.</p>
+            <p class="mt-1 hidden text-sm text-neutral-500 sm:block">Buat gangguan massal untuk beberapa CID sekaligus.</p>
         </div>
     </x-slot>
 

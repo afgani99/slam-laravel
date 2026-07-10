@@ -53,7 +53,17 @@
         }
         @endphp
 
-        <aside class="fixed inset-y-0 left-0 z-40 flex w-[280px] flex-col border-r border-white/5 bg-[#232222]">
+        <div x-show="sidebarOpen" @click="sidebarOpen = false" 
+             class="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+             x-transition:enter="transition opacity-0" 
+             x-transition:enter-start="opacity-0" 
+             x-transition:enter-end="opacity-100" 
+             x-transition:leave="transition opacity-100" 
+             x-transition:leave-start="opacity-100" 
+             x-transition:leave-end="opacity-0"></div>
+
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" 
+               class="fixed inset-y-0 left-0 z-40 flex w-[280px] flex-col border-r border-white/5 bg-[#232222] transition-transform duration-300 ease-in-out md:translate-x-0">
         <div class="flex items-center gap-2 px-5 pt-4">
             <span class="h-3 w-3 rounded-full bg-[#ff6b63]/90"></span>
             <span class="h-3 w-3 rounded-full bg-[#ffcf5a]/90"></span>

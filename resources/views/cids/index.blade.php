@@ -5,7 +5,7 @@
         </div>
         <div>
             <h2 class="text-[22px] font-semibold tracking-tight text-white">{{ __('cids.title') }}</h2>
-            <p class="mt-1 text-sm text-neutral-500">{{ __('cids.subtitle') }}</p>
+            <p class="mt-1 hidden text-sm text-neutral-500 sm:block">{{ __('cids.subtitle') }}</p>
         </div>
     </x-slot>
 
@@ -21,18 +21,20 @@
                         <p class="text-xs text-neutral-500">{{ __('cids.filter_subtitle') }}</p>
                     </div>
                 </div>
-                @if(in_array(auth()->user()->role, ['admin', 'operator']))
-                    <button @click="showCidModal = true" class="slam-primary-btn shrink-0">
-                        <span class="material-symbols-outlined text-[18px]">add</span>
-                        {{ __('cids.add_cid') }}
-                    </button>
-                @endif
+                <div class="flex items-center w-full sm:w-auto">
+                    @if(in_array(auth()->user()->role, ['admin', 'operator']))
+                        <button @click="showCidModal = true" class="slam-primary-btn w-full sm:w-auto shrink-0 justify-center">
+                            <span class="material-symbols-outlined text-[18px]">add</span>
+                            {{ __('cids.add_cid') }}
+                        </button>
+                    @endif
+                </div>
             </div>
 
 
-            <form method="GET" action="{{ route('cids.index') }}" class="mt-5 grid gap-3 lg:grid-cols-[1fr_120px_110px] lg:items-end">
+            <form method="GET" action="{{ route('cids.index') }}" class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_120px_110px] lg:items-end">
                 {{-- Search Input --}}
-                <div class="flex flex-col gap-1.5">
+                <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
                     <x-input-label for="search" :value="__('cids.search_label')" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
                     <div class="relative">
                         <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-neutral-500">search</span>
@@ -62,26 +64,31 @@
                 </div>
 
                 {{-- Action Buttons --}}
-                <div class="flex items-center gap-2 border-t border-white/5 pt-4 lg:col-span-3">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2 border-t border-white/5 pt-4 sm:col-span-2 lg:col-span-3">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
                     <button type="submit"
-                        class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
+                        class="inline-flex h-9 flex-1 sm:flex-none justify-center items-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
                         <span class="material-symbols-outlined text-[16px]">tune</span>
                         {{ __('cids.apply_filter') }}
                     </button>
                     @if (request()->has('search'))
                         <a href="{{ route('cids.index') }}"
-                            class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/10 bg-transparent px-4 text-sm text-neutral-400 transition hover:border-white/20 hover:text-white active:scale-[0.97]">
+                            class="inline-flex h-9 flex-1 sm:flex-none justify-center items-center gap-1.5 rounded-lg border border-white/10 bg-transparent px-4 text-sm text-neutral-400 transition hover:border-white/20 hover:text-white active:scale-[0.97]">
                             <span class="material-symbols-outlined text-[16px]">restart_alt</span>
                             {{ __('cids.reset_filter') }}
                         </a>
                     @endif
-                    <span class="ml-auto text-xs text-neutral-500">
+                    </div>
+                    
+                    <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto sm:ml-auto">
+                        <span class="text-xs text-neutral-500">
                         {{ __('cids.data_found', ['count' => $cids->total()]) }}
                     </span>
                     <a href="{{ route('cids.index', array_merge(request()->query(), ['export' => 1])) }}" class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-emerald-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-700 active:scale-[0.97]">
                         <span class="material-symbols-outlined text-[16px]">download</span>
                         {{ __('cids.export_excel') }}
                     </a>
+                    </div>
                 </div>
             </form>
         </div>
@@ -187,7 +194,7 @@
 
     {{-- Modal Tambah CID --}}
     <div x-show="showCidModal" x-cloak
-        class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4"
+        class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-3 py-6 sm:items-center sm:p-4"
         x-transition:enter="transition duration-200 ease-out"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
@@ -199,7 +206,7 @@
         <div x-show="showCidModal" x-transition:enter="transition duration-200 ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/60 backdrop-blur-sm" x-on:click="showCidModal = false" aria-hidden="true"></div>
 
         <div x-show="showCidModal" x-transition:enter="transition duration-200 ease-out" x-transition:enter-start="translate-y-6 opacity-0 scale-[0.97]" x-transition:enter-end="translate-y-0 opacity-100 scale-100" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="translate-y-0 opacity-100 scale-100" x-transition:leave-end="translate-y-6 opacity-0 scale-[0.97]" class="relative z-10 w-full max-w-2xl">
-            <div class="rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl shadow-black/50">
+            <div class="max-h-[calc(100vh-3rem)] overflow-hidden rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl shadow-black/50 sm:max-h-none">
                 {{-- Header --}}
                 <div class="flex items-center gap-3 px-5 pb-2 pt-4">
                     <div class="flex items-center gap-1.5">
@@ -211,11 +218,11 @@
                 </div>
 
                 {{-- Form --}}
-                <form method="POST" action="{{ route('cids.store') }}" class="p-6">
+                <form method="POST" action="{{ route('cids.store') }}" class="max-h-[calc(100vh-8rem)] overflow-y-auto p-4 sm:max-h-none sm:overflow-visible sm:p-6">
                     @csrf
                     <input type="hidden" name="_modal" value="1">
 
-                    <div class="grid gap-5 md:grid-cols-2">
+                    <div class="grid gap-4 md:grid-cols-2 md:gap-5">
                         <div>
                             <x-input-label for="cid" :value="__('cids.label_cid')" />
                             <x-text-input id="cid" name="cid" type="text" class="mt-1 block w-full" :value="old('cid')" required autofocus />
@@ -254,12 +261,12 @@
                         @endif
                     </div>
 
-                    <div class="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">
-                        <button type="submit" class="inline-flex h-[42px] items-center gap-2 rounded-xl bg-[#e66a4a] px-6 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
+                    <div class="mt-6 flex flex-col items-stretch gap-2 border-t border-white/5 pt-5 sm:flex-row sm:items-center sm:gap-3">
+                        <button type="submit" class="inline-flex h-[42px] items-center justify-center gap-2 rounded-xl bg-[#e66a4a] px-6 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
                             <span class="material-symbols-outlined text-[18px]">save</span>
                             {{ __('cids.btn_save') }}
                         </button>
-                        <button type="button" @click="showCidModal = false" class="inline-flex h-[42px] items-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">
+                        <button type="button" @click="showCidModal = false" class="inline-flex h-[42px] items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">
                             {{ __('cids.btn_cancel') }}
                         </button>
                     </div>

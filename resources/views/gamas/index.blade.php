@@ -5,7 +5,7 @@
         </div>
         <div>
             <h2 class="text-[22px] font-semibold tracking-tight text-white">{{ __('gamas.title') }}</h2>
-            <p class="mt-1 text-sm text-neutral-500">{{ __('gamas.subtitle') }}</p>
+            <p class="mt-1 hidden text-sm text-neutral-500 sm:block">{{ __('gamas.subtitle') }}</p>
         </div>
     </x-slot>
 
@@ -30,9 +30,9 @@
                 @endif
             </div>
 
-            <form method="GET" action="{{ route('gamas.index') }}" class="mt-5 grid gap-3 lg:grid-cols-[1fr_110px_155px] lg:items-end">
+            <form method="GET" action="{{ route('gamas.index') }}" class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_110px_155px] lg:items-end">
                 {{-- Search Input --}}
-                <div class="flex flex-col gap-1.5">
+                <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
                     <x-input-label for="search" :value="__('gamas.search_placeholder')" class="text-xs font-medium uppercase tracking-[0.15em] text-neutral-400" />
                     <div class="relative">
                         <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-neutral-500">search</span>
@@ -66,22 +66,27 @@
                 </div>
 
                 {{-- Action Buttons --}}
-                <div class="flex items-center gap-2 border-t border-white/5 pt-4 lg:col-span-3">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2 border-t border-white/5 pt-4 sm:col-span-2 lg:col-span-3">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
                     <button type="submit"
-                        class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
+                        class="inline-flex h-9 flex-1 sm:flex-none justify-center items-center gap-1.5 rounded-lg bg-[#e66a4a] px-4 text-sm font-medium text-white shadow-sm shadow-[#e66a4a]/20 transition hover:bg-[#ff7b5c] active:scale-[0.97]">
                         <span class="material-symbols-outlined text-[16px]">tune</span>
                         {{ __('gamas.apply_filter') }}
                     </button>
                     @if (request()->has('search'))
                         <a href="{{ route('gamas.index') }}"
-                            class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-white/10 bg-transparent px-4 text-sm text-neutral-400 transition hover:border-white/20 hover:text-white active:scale-[0.97]">
+                            class="inline-flex h-9 flex-1 sm:flex-none justify-center items-center gap-1.5 rounded-lg border border-white/10 bg-transparent px-4 text-sm text-neutral-400 transition hover:border-white/20 hover:text-white active:scale-[0.97]">
                             <span class="material-symbols-outlined text-[16px]">restart_alt</span>
                             {{ __('gamas.reset') }}
                         </a>
                     @endif
-                    <span class="ml-auto text-xs text-neutral-500">
+                    </div>
+                    
+                    <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto sm:ml-auto">
+                        <span class="text-xs text-neutral-500">
                         {{ __('gamas.total_found', ['total' => $gamasList->total()]) }}
                     </span>
+                    </div>
                 </div>
             </form>
         </div>
