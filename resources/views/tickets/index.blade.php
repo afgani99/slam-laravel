@@ -207,7 +207,7 @@
 
             {{-- Modal Panel --}}
             <div x-show="showTicketModal"
-                class="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+                class="relative z-10 w-full max-w-3xl"
                 x-transition:enter="transition duration-200 ease-out"
                 x-transition:enter-start="translate-y-6 opacity-0 scale-[0.97]"
                 x-transition:enter-end="translate-y-0 opacity-100 scale-100"
@@ -215,7 +215,7 @@
                 x-transition:leave-start="translate-y-0 opacity-100 scale-100"
                 x-transition:leave-end="translate-y-6 opacity-0 scale-[0.97]">
 
-                <div class="rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl shadow-black/50">
+                <div class="max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl shadow-black/50">
                     {{-- macOS-style header --}}
                     <div class="sticky top-0 z-10 flex items-center gap-3 px-5 pb-2 pt-4 bg-[#1f1f1f]">
                         <div class="flex items-center gap-1.5">

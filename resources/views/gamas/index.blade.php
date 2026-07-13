@@ -179,12 +179,12 @@
             x-transition:leave-end="opacity-0"
             x-on:keydown.escape.window="showCreateGamasModal = false"
         >
-            <div x-show="showCreateGamasModal" x-transition:enter="transition duration-200 ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/60 backdrop-blur-sm" x-on:click="showCreateGamasModal = false" aria-hidden="true"></div>
+            <div x-show="showCreateGamasModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm" x-on:click="showCreateGamasModal = false" aria-hidden="true"></div>
 
             <div x-show="showCreateGamasModal" x-transition:enter="transition duration-200 ease-out" x-transition:enter-start="translate-y-6 opacity-0 scale-[0.97]" x-transition:enter-end="translate-y-0 opacity-100 scale-100" x-transition:leave="transition duration-150 ease-in" x-transition:leave-start="translate-y-0 opacity-100 scale-100" x-transition:leave-end="translate-y-6 opacity-0 scale-[0.97]" class="relative z-10 w-full max-w-3xl">
-                <div class="rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl shadow-black/50">
+                <div class="max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#1f1f1f] shadow-2xl shadow-black/50">
                     {{-- Header --}}
-                    <div class="flex items-center gap-3 px-5 pb-2 pt-4">
+                    <div class="sticky top-0 z-10 flex items-center gap-3 px-5 pb-2 pt-4 bg-[#1f1f1f]">
                         <div class="flex items-center gap-1.5">
                             <button type="button" @click="showCreateGamasModal = false" class="h-3 w-3 rounded-full bg-[#ff5f57] ring-1 ring-black/20 transition hover:opacity-90" aria-label="Close modal"></button>
                             <span class="h-3 w-3 rounded-full bg-[#febc2e] ring-1 ring-black/20 opacity-60"></span>
@@ -194,11 +194,11 @@
                     </div>
 
                     {{-- Form --}}
-                    <form method="POST" action="{{ route('gamas.store') }}" class="p-6">
+                    <form method="POST" action="{{ route('gamas.store') }}" class="p-4 sm:p-6">
                         @csrf
                         <input type="hidden" name="_modal" value="1">
 
-                        <div class="grid gap-5 md:grid-cols-2">
+                        <div class="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2">
                             <div>
                                 <x-input-label for="modal_vendor_ticket_number" :value="__('cids.label_vendor_ticket_id')" />
                                 <x-text-input id="modal_vendor_ticket_number" name="vendor_ticket_number" type="text" class="mt-1 block w-full" :value="old('vendor_ticket_number')" />
@@ -217,7 +217,7 @@
                                 </div>
                                 <x-input-error class="mt-2" :messages="$errors->get('case_type')" />
                             </div>
-                            <div class="md:col-span-2">
+                            <div class="sm:col-span-2">
                                 <x-input-label for="modal_started_at" :value="__('modals.started_at')" />
                                 <x-text-input id="modal_started_at" name="started_at" type="datetime-local" class="mt-1 block w-full" :value="old('started_at')" required />
                                 <x-input-error class="mt-2" :messages="$errors->get('started_at')" />
@@ -291,12 +291,12 @@
                             <x-input-error class="mt-2" :messages="$errors->get('cid_ids')" />
                         </div>
 
-                        <div class="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">
-                            <button type="submit" class="inline-flex h-[42px] items-center gap-2 rounded-xl bg-[#e66a4a] px-6 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
+                        <div class="mt-6 flex flex-col-reverse sm:flex-row items-center gap-3 border-t border-white/5 pt-5">
+                            <button type="button" @click="showCreateGamasModal = false" class="w-full sm:w-auto inline-flex h-[42px] items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">{{ __('modals.btn_cancel') }}</button>
+                            <button type="submit" class="w-full sm:w-auto inline-flex h-[42px] items-center justify-center gap-2 rounded-xl bg-[#e66a4a] px-6 text-sm font-medium text-white transition hover:bg-[#ff7b5c]">
                                 <span class="material-symbols-outlined text-[18px]">bolt</span>
                                 {{ __('modals.save_gamas') }}
                             </button>
-                            <button type="button" @click="showCreateGamasModal = false" class="inline-flex h-[42px] items-center gap-2 rounded-xl border border-white/10 bg-[#262626] px-6 text-sm text-neutral-300 transition hover:bg-[#2f2f2f] hover:text-white">{{ __('modals.btn_cancel') }}</button>
                         </div>
                     </form>
                 </div>
