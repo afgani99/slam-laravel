@@ -44,15 +44,29 @@ class MysqlBackupDriver implements BackupDriverInterface
 
         $command = [
             $this->mysqlDumpPath,
-            '-u' . env('DB_USERNAME'),
-            '--add-drop-table',
         ];
 
-        if (!empty(env('DB_PASSWORD'))) {
-            $command[] = '-p' . env('DB_PASSWORD');
+        // Username harus ada
+        $username = env('DB_USERNAME');
+        if (!empty($username)) {
+            $command[] = '-u' . $username;
         }
 
-        $command[] = env('DB_DATABASE');
+        // Password harus tepat setelah username jika ada
+        $password = env('DB_PASSWORD');
+        if (!empty($password)) {
+            $command[] = '-p' . $password;
+        }
+
+        // Tambahkan opsi tambahan
+        $command[] = '--add-drop-table';
+
+        // Database name
+        $database = env('DB_DATABASE');
+        if (!empty($database)) {
+            $command[] = $database;
+        }
+
         $command[] = '--result-file=' . $path;
 
         $process = Process::run($command);
