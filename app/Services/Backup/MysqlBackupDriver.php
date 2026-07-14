@@ -4,6 +4,7 @@ namespace App\Services\Backup;
 
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class MysqlBackupDriver implements BackupDriverInterface
 {
@@ -12,8 +13,24 @@ class MysqlBackupDriver implements BackupDriverInterface
 
     public function __construct()
     {
-        $this->mysqlDumpPath = env('DB_BACKUP_DUMP_PATH', '/Applications/XAMPP/xamppfiles/bin/mysqldump');
-        $this->mysqlPath = env('DB_BACKUP_MYSQL_PATH', '/Applications/XAMPP/xamppfiles/bin/mysql');
+        // Default path jika DB_BACKUP_DUMP_PATH tidak di-set di .env
+        $defaultDumpPath = '/usr/bin/mysqldump'; // Default untuk Linux/Ubuntu
+        if (PHP_OS_FAMILY === 'Darwin') {
+            $defaultDumpPath = '/Applications/XAMPP/xamppfiles/bin/mysqldump'; // Default XAMPP Mac
+        } elseif (PHP_OS_FAMILY === 'Windows') {
+            $defaultDumpPath = 'C:\\xampp\\mysql\\bin\\mysqldump.exe'; // Default XAMPP Windows
+        }
+
+        $this->mysqlDumpPath = env('DB_BACKUP_DUMP_PATH', $defaultDumpPath);
+        // Default path jika DB_BACKUP_MYSQL_PATH tidak di-set di .env
+        $defaultMysqlPath = '/usr/bin/mysql'; // Default untuk Linux/Ubuntu
+        if (PHP_OS_FAMILY === 'Darwin') {
+            $defaultMysqlPath = '/Applications/XAMPP/xamppfiles/bin/mysql'; // Default XAMPP Mac
+        } elseif (PHP_OS_FAMILY === 'Windows') {
+            $defaultMysqlPath = 'C:\\xampp\\mysql\\bin\\mysql.exe'; // Default XAMPP Windows
+        }
+
+        $this->mysqlPath = env('DB_BACKUP_MYSQL_PATH', $defaultMysqlPath);
     }
 
     public function backup(): string
@@ -64,7 +81,7 @@ class MysqlBackupDriver implements BackupDriverInterface
         $process = Process::input(fopen($filePath, 'r'))->run($command);
 
         if (!$process->successful()) {
-            \Log::error("Restore Error: " . $process->errorOutput());
+            Log::error("Restore Error: " . $process->errorOutput());
         }
 
         return $process->successful();
