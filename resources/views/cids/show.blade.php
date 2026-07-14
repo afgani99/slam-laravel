@@ -112,7 +112,9 @@
                         @forelse ($recentTickets as $ticket)
                             <tr class="transition duration-150 hover:bg-white/[0.03]">
                                 <td class="px-4 py-3">
-                                    <p class="font-medium text-white">{{ $ticket->ticket_number }}</p>
+                                    <a href="{{ route('tickets.show', $ticket) }}" class="font-medium text-[#e66a4a] transition hover:text-[#ff7b5c] hover:underline">
+                                        {{ $ticket->ticket_number }}
+                                    </a>
                                 </td>
                                 <td class="px-4 py-3 text-sm text-neutral-300">{{ $ticket->case_type }}</td>
                                 <td class="px-4 py-3">@include('tickets._status-badge', ['status' => $ticket->status])</td>

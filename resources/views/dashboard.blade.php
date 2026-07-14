@@ -104,7 +104,15 @@
                         <thead class="border-b border-white/5 bg-[#2a2a2a] text-[11px] uppercase tracking-[0.18em] text-neutral-500"><tr><th class="px-4 py-3">{{ __('dashboard.col_ticket') }}</th><th class="px-4 py-3">{{ __('dashboard.col_cid') }}</th><th class="px-4 py-3">{{ __('dashboard.col_when') }}</th></tr></thead>
                         <tbody class="divide-y divide-white/5">
                             @forelse ($recentTickets as $ticket)
-                                <tr class="transition duration-200 hover:bg-white/[0.03]"><td class="px-4 py-3 text-neutral-100">{{ $ticket->ticket_number }}</td><td class="px-4 py-3 text-neutral-400">{{ $ticket->cid?->cid ?? '-' }}</td><td class="px-4 py-3 text-neutral-500">{{ $ticket->created_at?->diffForHumans() }}</td></tr>
+                                <tr class="transition duration-200 hover:bg-white/[0.03]">
+                                    <td class="px-4 py-3 text-neutral-100">
+                                        <a href="{{ route('tickets.show', $ticket) }}" class="font-medium text-[#e66a4a] transition hover:text-[#ff7b5c] hover:underline">
+                                            {{ $ticket->ticket_number }}
+                                        </a>
+                                    </td>
+                                    <td class="px-4 py-3 text-neutral-400">{{ $ticket->cid?->cid ?? '-' }}</td>
+                                    <td class="px-4 py-3 text-neutral-500">{{ $ticket->created_at?->diffForHumans() }}</td>
+                                </tr>
                             @empty
                                 <tr><td colspan="3" class="px-4 py-6 text-center text-sm text-neutral-500">{{ __('dashboard.no_recent_tickets') }}</td></tr>
                             @endforelse
