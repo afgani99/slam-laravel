@@ -46,24 +46,24 @@ class MysqlBackupDriver implements BackupDriverInterface
             $this->mysqlDumpPath,
         ];
 
-        $username = env('DB_USERNAME');
+        // Gunakan config() bukan env() agar bekerja saat config:cache aktif
+        $username = config('database.connections.mysql.username');
         if (!empty($username)) {
             $command[] = '-u' . $username;
         }
 
-        $password = env('DB_PASSWORD');
+        $password = config('database.connections.mysql.password');
         if (!empty($password)) {
             $command[] = '-p' . $password;
         }
 
         $command[] = '--add-drop-table';
 
-        $database = env('DB_DATABASE');
+        $database = config('database.connections.mysql.database');
         if (!empty($database)) {
             $command[] = $database;
         }
 
-        // Log perintah untuk debugging (hapus jika sudah stabil)
         Log::info('Executing Backup Command: ' . implode(' ', $command));
 
         $process = Process::run($command);
@@ -73,7 +73,6 @@ class MysqlBackupDriver implements BackupDriverInterface
             throw new \Exception("Backup failed: " . ($process->errorOutput() ?: 'Unknown error occurred. Check laravel.log'));
         }
 
-        // Simpan output stdout ke file
         File::put($path, $process->output());
 
         return $path;
