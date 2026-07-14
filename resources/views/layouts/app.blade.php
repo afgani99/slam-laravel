@@ -8,6 +8,8 @@
 
         <title>{{ config('app.name', 'SLAM') }} - {{ trim($__env->yieldContent('title', 'SLA Monitoring')) }}</title>
 
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200&display=swap" rel="stylesheet" />
