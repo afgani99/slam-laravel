@@ -9,7 +9,7 @@
         </div>
     </x-slot>
 
-    <div x-data="{ showGamasModal: false, modalAction: 'edit', reason: '', rfoAction: '{{ addslashes($gamas->rfo_action) }}', pendingAt: '', resumeAt: '' }" class="space-y-6">
+    <div x-data="{ showGamasModal: false, modalAction: 'edit', reason: '', rfoAction: {{ json_encode($gamas->rfo_action ?? '') }}, pendingAt: '', resumeAt: '' }" class="space-y-6">
         <div class="slam-card p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -277,7 +277,7 @@
                             </div>
                             <div class="md:col-span-2">
                                 <x-input-label for="modal_reason" :value="__('gamas_show.pending_reason')" />
-                                <textarea id="modal_reason" x-model="reason" name="reason" rows="3" class="mt-1 block w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-2 text-neutral-100 shadow-sm focus:border-orange-500 focus:ring-orange-500/30" :placeholder="__('gamas_show.pending_reason_placeholder')"></textarea>
+                                <textarea id="modal_reason" x-model="reason" name="reason" rows="3" class="mt-1 block w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-2 text-neutral-100 shadow-sm focus:border-orange-500 focus:ring-orange-500/30" placeholder="{{ __('gamas_show.pending_reason_placeholder') }}"></textarea>
                             </div>
                             @if ($gamas->isOpen())
                                 <div>
