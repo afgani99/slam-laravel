@@ -23,7 +23,9 @@ class CidController extends Controller
     public function index(Request $request)
     {
         if ($request->has('export')) {
-            $cids = Cid::orderBy('vendor_name')->get();
+            $cids = Cid::orderBy('is_dismantled', 'asc') // Active (0) first, then Dismantled (1)
+                ->orderBy('customer_name', 'asc') // Sort by customer_name alphabetically
+                ->get();
             return (new CidExport($cids))->download('Master_CID_' . date('Y-m-d') . '.xlsx');
         }
 
